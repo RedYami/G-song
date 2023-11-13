@@ -94,7 +94,7 @@ export default function Login() {
           />
           <Button type="submit">Submit</Button>
           <Link href="authenticate/register">
-            Haven't account? Register Here
+            {`Haven't account? Register Here`}
           </Link>
         </form>
       </main>

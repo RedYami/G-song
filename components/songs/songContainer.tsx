@@ -39,8 +39,9 @@ export default function Song() {
           <AvatarDemo avatarSrc={currentUser.photoURL as string} />
         </section>
       )}
-      {allSongs.map((song) => (
+      {allSongs.map((song, index) => (
         <SongFrom
+          key={index}
           songKey={song.key as string}
           title={song.title}
           verses={song.verses}
