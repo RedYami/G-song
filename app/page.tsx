@@ -1,7 +1,9 @@
+import { ModeToggle } from "@/components/theme-toggle";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h3 className=" text-4xl text-black">Home page</h3>
+    <main className="flex justify-between p-4 dark:text-white text-black">
+      <ModeToggle />
     </main>
   );
 }
