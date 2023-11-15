@@ -1,38 +1,23 @@
-import { useSongs } from "@/app/store";
-import { useState } from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import SongFrom from "./songForm";
+import { NormalSongFrom } from "./songForm";
 import { v4 } from "uuid";
+import axios from "axios";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/app/firebase-config";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import Submitting from "../skeletons/submitingSkeleton";
 
-type lyric = {
-  id: string;
-  text: string;
-};
-type Verse = {
-  id: string;
-  verse_number: number;
-  lyrics: lyric[];
-  type: string;
-};
-type Song = {
-  tile: string;
-  verses: Verse[];
-  song_number: number;
-  key: string | null;
-};
-
-export default function CreateSong({
-  hideCreating,
-}: {
-  hideCreating: () => void;
-}) {
-  const allSongs = useSongs((state) => state.songs);
-  const addNewSong = useSongs((state) => state.addNewSong);
+export default function CreateSong() {
   const [title, setTitle] = useState("");
   const [chorus, setChorus] = useState(false);
   const [hidedVerses, setHidedVerses] = useState<string[]>(["1"]);
   const [key, setKey] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [submiting, setSubmiting] = useState(false);
   const [verses, setVerses] = useState([
     {
       id: "2k3",
@@ -40,13 +25,65 @@ export default function CreateSong({
       type: "verse",
       lyrics: [
         {
-          id: 0,
-          text: "",
+          id: "0",
+          lyric_line: "",
         },
       ],
     },
   ]);
-  console.log("new verse:", verses.length);
+  const defaultVerses = [
+    {
+      id: "2k3",
+      verse_number: 1,
+      type: "verse",
+      lyrics: [
+        {
+          id: "0",
+          lyric_line: "",
+        },
+      ],
+    },
+  ];
+
+  useEffect(() => {
+    // Load draft from localStorage on component mount
+    const savedVerses = localStorage.getItem("verses");
+    const savedKey = localStorage.getItem("songKey");
+    const savedTitle = localStorage.getItem("title");
+
+    if (savedVerses) {
+      //   setVerses((savedVerses as any) || defaultVerses);
+      setTitle(savedTitle || "");
+      setKey(savedKey || "");
+      setVerses(JSON.parse(savedVerses as any) || defaultVerses);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save draft to localStorage on every input change
+    if (
+      verses?.[0].lyrics[0].lyric_line !== "" &&
+      verses?.[0].lyrics.length > 1
+    ) {
+      localStorage.setItem("verses", JSON.stringify(verses));
+    }
+    if (key !== "" || title !== "") {
+      localStorage.setItem("songKey", key);
+      localStorage.setItem("title", title);
+    }
+  }, [verses, key, title]);
+
+  const clearDraft = () => {
+    // Clear draft and remove from localStorage
+    localStorage.removeItem("verses");
+    localStorage.removeItem("songKey");
+    localStorage.removeItem("title");
+  };
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+  }, []);
   //adding new verse
   const handleAddNewVerse = () => {
     setVerses([
@@ -57,8 +94,8 @@ export default function CreateSong({
         type: "verse",
         lyrics: [
           {
-            id: 0,
-            text: "",
+            id: v4(),
+            lyric_line: "",
           },
         ],
       },
@@ -75,8 +112,8 @@ export default function CreateSong({
           type: "chorus",
           lyrics: [
             {
-              id: 0,
-              text: "",
+              id: "0",
+              lyric_line: "",
             },
           ],
         },
@@ -96,8 +133,8 @@ export default function CreateSong({
             lyrics: [
               ...verse.lyrics,
               {
-                id: verse.lyrics.length + 1,
-                text: "",
+                id: v4(),
+                lyric_line: "",
               },
             ],
           };
@@ -109,7 +146,7 @@ export default function CreateSong({
   //update lyric by verse id and its id
   const handleUpdateLyric = (
     verseId: string,
-    lyricId: number,
+    lyricId: string,
     newLyric: string
   ) => {
     setVerses((verses) =>
@@ -121,7 +158,7 @@ export default function CreateSong({
               if (lyric.id === lyricId) {
                 return {
                   ...lyric,
-                  text: newLyric,
+                  lyric_line: newLyric,
                 };
               }
               return lyric;
@@ -138,7 +175,7 @@ export default function CreateSong({
     setHidedVerses(hidedVerses.filter((verse) => verse !== verseId));
   };
   // delete lyric by its lyricId
-  const deleteLyricLine = (lyricId: number, verseNumber: number) => {
+  const deleteLyricLine = (lyricId: string, verseNumber: number) => {
     setVerses((verses) =>
       verses.map((verse) => {
         if (verse.verse_number === verseNumber) {
@@ -153,23 +190,38 @@ export default function CreateSong({
   };
   //clearing all song data
   const clearSongData = () => {
-    setVerses([]);
+    setVerses(defaultVerses);
     setTitle("");
     setKey("");
     setHidedVerses(["1"]);
     setChorus(false);
   };
   //submit new song
-  const handleCreateNewSong = () => {
-    addNewSong({
+  const createNewSong = async () => {
+    const response = await axios.post("http://localhost:3000/api/song", {
+      userEmail: user?.email,
       title: title,
-      verses: verses,
-      song_number: allSongs.length + 1,
       key: key,
+      verses: verses,
     });
-    hideCreating();
-    clearSongData();
+    if (response.status === 200) {
+      toast.success("creating new song success");
+      setSubmiting(false);
+      clearSongData();
+      clearDraft();
+    } else {
+      toast.error("oops something went wrong check log");
+    }
   };
+  const createMutation = useMutation({
+    mutationFn: createNewSong,
+  });
+
+  const handleCreateNewSong = async () => {
+    setSubmiting(true);
+    createMutation.mutate();
+  };
+
   //toogling song verses hide or show
   const showOrHideVerse = (verseId: string) => {
     if (hidedVerses.includes(verseId)) {
@@ -178,9 +230,10 @@ export default function CreateSong({
       setHidedVerses((hidedVerse) => [...hidedVerse, verseId]);
     }
   };
+
   return (
     <>
-      <section className=" flex justify-center flex-col text-black dark:text-white xsm:w-[100vw] sm:w-[60vw]xsm:border-b-4 sm:border-r-4 dark:border-white border-black to-blue-500 h-full ">
+      <section className=" flex justify-center flex-col text-black dark:text-white xsm:w-[100vw] sm:w-[60vw] xsm:border-b-4 sm:border-r-4 dark:border-white border-black to-blue-500 h-full ">
         <div className="flex justify-start ">
           <Button
             type="button"
@@ -229,15 +282,15 @@ export default function CreateSong({
             />
           </div>
           <div className=" flex justify-center flex-wrap items-start p-1 ">
-            {verses.map((verse) => (
+            {verses?.map((verse) => (
               <div
                 className=" flex flex-col justify-center rounded-lg min-w-[300px] items-center m-1 border-2"
                 key={verse.verse_number}
               >
                 <div className=" verse flex w-full justify-between p-1 items-center">
-                  <h3 className=" mx-2">
+                  <Button className=" mx-2" type="button">
                     {verse.type === "verse" ? `verse` : verse.type}
-                  </h3>
+                  </Button>
                   <Button
                     className="hover:bg-red-500 mx-2"
                     type="button"
@@ -245,17 +298,19 @@ export default function CreateSong({
                   >
                     toogle
                   </Button>
-                  <Button
-                    className="hover:bg-red-500 mx-2"
-                    type="button"
-                    onClick={() => deleteVerse(verse.id)}
-                  >
-                    X
-                  </Button>
+                  {verses.length > 1 && (
+                    <Button
+                      className="hover:bg-red-500 mx-2"
+                      type="button"
+                      onClick={() => deleteVerse(verse.id)}
+                    >
+                      X
+                    </Button>
+                  )}
                 </div>
                 <div
                   className={
-                    " flex flex-col justify-center items-center p-1 w-full bg-slate-500 rounded-b-lg" +
+                    " flex flex-col justify-start p-1 w-full rounded-b-lg" +
                     (hidedVerses.includes(verse.id) && " hidden")
                   }
                 >
@@ -276,20 +331,22 @@ export default function CreateSong({
                     >
                       <input
                         required
-                        className="xsm:min-w-[100px] sm:min-w-[280px] mr-2 p-1 border-b-2 border-slate-700 bg-none outline-none bg-slate-500"
-                        value={lyric.text}
+                        className="xsm:min-w-[100px] sm:min-w-[280px] mr-2 p-1 border-b-2 border-black dark:border-white  outline-none bg-white dark:bg-black"
+                        value={lyric.lyric_line}
                         onChange={(e) => {
                           handleUpdateLyric(verse.id, lyric.id, e.target.value);
                         }}
                       />
-                      <Button
-                        onClick={() =>
-                          deleteLyricLine(lyric.id, verse.verse_number)
-                        }
-                        className=" bg-red-500 text-white hover:bg-red-700"
-                      >
-                        X
-                      </Button>
+                      {verse.lyrics.length > 1 && (
+                        <Button
+                          onClick={() =>
+                            deleteLyricLine(lyric.id, verse.verse_number)
+                          }
+                          className=" bg-red-500 text-white hover:bg-red-700"
+                        >
+                          X
+                        </Button>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -302,12 +359,20 @@ export default function CreateSong({
           >
             Create
           </Button>
+          <Button
+            className=" bg-red-400 m-2 hover:bg-red-600 text-white"
+            onClick={() => clearDraft()}
+            type="button"
+          >
+            Clear draft
+          </Button>
         </form>
       </section>
       <section className="flex flex-col">
         <h3 className="text-center xsm:text-lg sm:text-2xl p-2">Preview</h3>
-        <SongFrom verses={verses} title={title} songKey={key} />
+        <NormalSongFrom verses={verses} title={title} songKey={key} />
       </section>
+      {submiting && <Submitting />}
     </>
   );
 }

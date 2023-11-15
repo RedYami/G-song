@@ -10,7 +10,6 @@ export default function CreateSongButton() {
       onClick={(e) => {
         setIsCreatingSong();
       }}
-      className=""
     >
       Create song
     </Button>

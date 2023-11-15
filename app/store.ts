@@ -39,3 +39,10 @@ export const useIsCreating = create<CreatingSong>((set)=>({
         isCreating:!state.isCreating,
     }))
 }))
+
+export const useIsSearching = create((set)=>({
+    isSearching:false,
+    setIsSearching:(boolean:boolean)=>set(()=>({
+        isSearching:boolean,
+    }))
+}))
