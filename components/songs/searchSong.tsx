@@ -1,9 +1,44 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import axios from "axios";
+import { SearchingSkeleton } from "../skeletons/searchingSkeleton";
+import Link from "next/link";
+import toast from "react-hot-toast";
+import SearchByDropdown from "../searchDropdown";
 
 export default function SearchSong({ hide }: { hide: () => void }) {
   const [searchText, setSearchText] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [searchSongs, setSearchSongs] = useState<any>([]);
+  const [searchBy, setSearchBy] = useState("lyric");
+  console.log(searchBy);
+
+  async function getSearchSong() {
+    if (!searchText) {
+      setSearching(false);
+      return toast("📢 please enter texts to search");
+    }
+    if (searchBy === "lyric") {
+      const searchSongs = await fetch(
+        `http://localhost:3000/api/lyric?searchText=${searchText}`
+      );
+      if (searchSongs.ok) {
+        setSearchSongs(await searchSongs.json());
+        setSearching(false);
+      }
+    }
+    if (searchBy === "title") {
+      const searchSongs = await fetch(
+        `http://localhost:3000/api/song/search?searchText=${searchText}`
+      );
+      if (searchSongs.ok) {
+        setSearchSongs(await searchSongs.json());
+        setSearching(false);
+      }
+    }
+  }
+
   return (
     <article
       onClick={(e) => {
@@ -16,6 +51,10 @@ export default function SearchSong({ hide }: { hide: () => void }) {
         onClick={(e) => e.stopPropagation()}
         className="flex flex-col rounded-lg border-2 border-white justify-start w-[50vw] min-h-[50vh] items-start"
       >
+        <div className="flex w-full justify-start m-2 items-center">
+          <h5>Search by:</h5>
+          <SearchByDropdown select={setSearchBy} currentType={searchBy} />
+        </div>
         <div className="flex w-full p-2">
           <Input
             onClick={(e) => e.stopPropagation()}
@@ -26,13 +65,37 @@ export default function SearchSong({ hide }: { hide: () => void }) {
           <Button
             onClick={(e) => {
               e.stopPropagation();
+              setSearching(true);
+              getSearchSong();
             }}
           >
             Search
           </Button>
         </div>
-        <div className=""></div>
+        <ul className="w-full flex flex-col justify-center max-h-[60vh] overflow-auto">
+          {searchSongs &&
+            searchSongs?.map((item: any) =>
+              searchBy === "lyric" ? (
+                <Link
+                  key={item.id}
+                  href={`songs/${item?.parent_verse?.songId}`}
+                  className="text-lg font-bold p-2 m-2 rounded-md border-2"
+                >
+                  {item.lyric_line}
+                </Link>
+              ) : (
+                <Link
+                  key={item.id}
+                  href={`songs/${item?.id}`}
+                  className="text-2xl font-bold p-2 m-2 rounded-md border-2"
+                >
+                  {item.title}
+                </Link>
+              )
+            )}
+        </ul>
       </section>
+      {searching && <SearchingSkeleton />}
     </article>
   );
 }

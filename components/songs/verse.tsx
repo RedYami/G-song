@@ -17,7 +17,7 @@ type Song = {
 export default function Verse({ song }: { song: Verse }) {
   return (
     <div className=" flex sm:flex-col md:flex-row items-start justify-start my-2 ">
-      <h4 className="px-3">{song.type === "verse" ? `*` : `    🎵`}</h4>
+      <h4 className="px-3">{song.type === "verse" ? `*` : `>>>>`}</h4>
       <div className=" flex flex-col w-fit text-lg justify-end ">
         {song.lyrics.map((lyric) => (
           <pre className=" chorus w-fit " key={lyric.id}>

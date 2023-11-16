@@ -11,18 +11,29 @@ export async function getLyric(searchText:string){
             parent_verse:true,
         },
         });
+    // const songs = await prisma.song.findMany({
+    //   where:{
+    //     titleLowerCase:{
+    //       contains:searchText.toLowerCase(),
+    //     }
+    //   },
+    //   include:{
+    //     verses:true,
+    //   }
+    // })
       
-        // Extract song IDs from the distinct result
-        const songIds = distinctSongIds.map((item) => item.parent_verse.songId);
-      
-        // Fetch songs based on the distinct song IDs
-        const resultSongs = await prisma.song.findMany({
-          where: {
-            id: {
-              in: songIds,
-            },
-          },
-        });
+    // // extract song IDs from the distinct result
+    // const songIds1 = distinctSongIds.map((item) => item.parent_verse.songId);
+    // const songIds2 = songs.map((item)=>item.id)
+    // const songIds = songIds1.concat(songIds2)  
+    //     // fetch songs based on the distinct song IDs
+    //     const resultSongs = await prisma.song.findMany({
+    //       where: {
+    //         id: {
+    //           in: songIds,
+    //         },
+    //       },
+    //     });
 
-    return resultSongs
+    return distinctSongIds
 }

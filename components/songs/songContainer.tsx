@@ -54,7 +54,7 @@ export default function Song() {
     <main className="flex flex-col relative ">
       {currentUser && (
         <section className="flex justify-between py-2 items-center">
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center ">
             <h3 className="m-1">{currentUser?.displayName}</h3>
             <AvatarDemo avatarSrc={currentUser.photoURL as string} />
           </div>

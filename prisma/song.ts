@@ -50,8 +50,41 @@ export async function AddSong(data: any) {
       return error
     }
   }
+  export async function getASongById(songId:string){
+    try {
+      const song = await prisma.song.findUnique({
+        where:{
+          id:songId
+        },
+        include:{
+          verses:true,
+          author:true,
+        }
+      })
+      return song
+    } catch (error) {
+      console.log("internal error:",error);
+      
+      return error
+    }
+  }
 
   export async function deleteAllSongs(){
     await prisma.song.deleteMany();
     return "success"
+  }
+
+  export async function searchSongs(searchText:string){
+    try {
+      const songs = await prisma.song.findMany({
+        where:{
+          titleLowerCase:{
+            contains:searchText
+          }
+        }
+      })
+      return songs
+    } catch (error) {
+      return error
+    }
   }

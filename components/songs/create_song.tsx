@@ -123,6 +123,20 @@ export default function CreateSong() {
     }
     setChorus(!chorus);
   };
+  // update verse type chorus or normal verse
+  const handlingVerseType = (id: string) => {
+    setVerses(
+      verses.map((verse) => {
+        if (verse.id === id) {
+          return {
+            ...verse,
+            type: verse.type === "verse" ? "chorus" : "verse",
+          };
+        }
+        return verse;
+      })
+    );
+  };
   //add new lyric line
   const handleAddNewLyricLine = (verseNumber: number) => {
     setVerses((verses) =>
@@ -288,7 +302,11 @@ export default function CreateSong() {
                 key={verse.verse_number}
               >
                 <div className=" verse flex w-full justify-between p-1 items-center">
-                  <Button className=" mx-2" type="button">
+                  <Button
+                    className=" mx-2"
+                    type="button"
+                    onClick={() => handlingVerseType(verse.id)}
+                  >
                     {verse.type === "verse" ? `verse` : verse.type}
                   </Button>
                   <Button
