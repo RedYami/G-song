@@ -20,6 +20,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import SomethingLoading from "../loadingSomething";
 const formSchema = z.object({
   email: z.string().min(1, {
     message: "Email type is not correct.",
@@ -31,6 +33,7 @@ const formSchema = z.object({
 
 export default function Login() {
   const router = useRouter();
+  const [isLogging, setIsLogging] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
@@ -41,6 +44,7 @@ export default function Login() {
     await lognIn(data.email, data.password);
   };
   const lognIn = async (email: string, password: string) => {
+    setIsLogging(true);
     try {
       await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
@@ -97,6 +101,11 @@ export default function Login() {
             {`Haven't account? Register Here`}
           </Link>
         </form>
+        {isLogging && (
+          <SomethingLoading>
+            <h3 className="text-2xl">Logging</h3>
+          </SomethingLoading>
+        )}
       </main>
     </Form>
   );

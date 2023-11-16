@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import axios from "axios";
-import { SearchingSkeleton } from "../skeletons/searchingSkeleton";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import SearchByDropdown from "../searchDropdown";
+import SomethingLoading from "../loadingSomething";
 
 export default function SearchSong({ hide }: { hide: () => void }) {
   const [searchText, setSearchText] = useState("");
@@ -49,7 +48,7 @@ export default function SearchSong({ hide }: { hide: () => void }) {
     >
       <section
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col rounded-lg border-2 border-white justify-start w-[50vw] min-h-[50vh] items-start"
+        className="flex flex-col rounded-lg border-2 border-black dark:border-white justify-start w-[50vw] min-h-[50vh] items-start"
       >
         <div className="flex w-full justify-start m-2 items-center">
           <h5>Search by:</h5>
@@ -95,7 +94,11 @@ export default function SearchSong({ hide }: { hide: () => void }) {
             )}
         </ul>
       </section>
-      {searching && <SearchingSkeleton />}
+      {searching && (
+        <SomethingLoading>
+          <h3 className="text-2xl">Searching</h3>
+        </SomethingLoading>
+      )}
     </article>
   );
 }

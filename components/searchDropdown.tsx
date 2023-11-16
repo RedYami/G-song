@@ -15,7 +15,7 @@ export default function SearchByDropdown({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="border-2 border-white rounded-md mx-2 p-1 hover:bg-white hover:text-black">
+      <DropdownMenuTrigger className="border-2 border-black dark:border-white rounded-md mx-2 p-1 hover:bg-white hover:text-black">
         {currentType}
       </DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -9,7 +9,7 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
-import Submitting from "../skeletons/submitingSkeleton";
+import SomethingLoading from "../loadingSomething";
 
 export default function CreateSong() {
   const [title, setTitle] = useState("");
@@ -390,7 +390,11 @@ export default function CreateSong() {
         <h3 className="text-center xsm:text-lg sm:text-2xl p-2">Preview</h3>
         <NormalSongFrom verses={verses} title={title} songKey={key} />
       </section>
-      {submiting && <Submitting />}
+      {submiting && (
+        <SomethingLoading>
+          <h3 className="text-2xl">Creating...</h3>
+        </SomethingLoading>
+      )}
     </>
   );
 }
