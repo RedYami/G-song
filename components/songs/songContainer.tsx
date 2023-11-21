@@ -57,7 +57,7 @@ export default function Song() {
       {status === "pending" && <SongSkeleton />}
       {data?.length === 0 && (
         <h3 className="xsm:text-lg sm:text-2xl text-center">
-          {songType} doesn't exist yet :)
+          {` ${songType} doesn't exist yet :)`}
         </h3>
       )}
       {data &&
