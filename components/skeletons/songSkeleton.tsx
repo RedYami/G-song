@@ -20,7 +20,7 @@ export default function SongSkeleton() {
               <div className=" flex flex-col w-fit text-lg justify-end ">
                 {[1, 2, 3].map((lyric) => (
                   <Skeleton
-                    className="xsm:w-[100px] sm:w-[300px] my-2 xsm:h-[20px] sm:h-[28px] rounded-full bg-black dark:bg-white"
+                    className="xsm:w-[200px] sm:w-[300px] my-2 xsm:h-[20px] sm:h-[28px] rounded-full bg-black dark:bg-white"
                     key={lyric}
                   />
                 ))}

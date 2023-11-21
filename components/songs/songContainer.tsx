@@ -1,17 +1,14 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Verse from "./verse";
-import { AvatarDemo } from "../avatar";
-import { User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/app/firebase-config";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+
 import SongForm from "./songForm";
 import SongSkeleton from "../skeletons/songSkeleton";
-import SearchButton from "./searchBtn";
-import SearchSong from "./searchSong";
-import { useIsSearching } from "@/app/store";
+import { SongHeader } from "./searchBtn";
+import { useSongCatagory } from "@/app/store";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type lyric = {
   id: number;
@@ -24,55 +21,57 @@ type Verse = {
   id: string;
 };
 type Song = {
+  id: string;
   title: string;
   verses: Verse[];
   song_number: number;
   key: string | null;
   author: Author;
+  songType: string;
 };
 type Author = {
   username: string;
   email: string;
   id: string;
 };
+
 export default function Song() {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [hideSearch, setHideSearch] = useState(true);
+  const songType = useSongCatagory((state) => state.songCatagory);
   const { data, status } = useQuery({
-    queryKey: ["allSongs"],
+    queryKey: ["songs", songType],
     queryFn: async () => {
-      const songs = await axios.get("http://localhost:3000/api/song");
-      return songs.data;
+      const res = await axios.get(
+        `http://localhost:3000/api/song/type?songType=${songType}`
+      );
+      if (res.status === 200) {
+        return res.data;
+      } else {
+        toast.error("error in fetching songs");
+      }
     },
   });
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setCurrentUser(currentUser);
-    });
-  });
+
   return (
     <main className="flex flex-col relative ">
-      {currentUser && (
-        <section className="flex justify-between py-2 items-center">
-          <div className="flex justify-center items-center ">
-            <h3 className="m-1">{currentUser?.displayName}</h3>
-            <AvatarDemo avatarSrc={currentUser.photoURL as string} />
-          </div>
-          <SearchButton hideSearch={() => setHideSearch(false)} />
-        </section>
-      )}
+      <SongHeader />
       {status === "pending" && <SongSkeleton />}
-      {status === "success" &&
+      {data?.length === 0 && (
+        <h3 className="xsm:text-lg sm:text-2xl text-center">
+          {songType} doesn't exist yet :)
+        </h3>
+      )}
+      {data &&
         data?.map((song: Song, index: number) => (
           <SongForm
+            songType={song.songType}
+            songId={song.id}
             key={index}
             songKey={song.key as string}
             author={song.author}
             title={song.title}
-            verses={JSON.parse(JSON.stringify(song.verses))}
+            verses={JSON.parse(JSON.stringify(song?.verses))}
           />
         ))}
-      {!hideSearch && <SearchSong hide={() => setHideSearch(true)} />}
     </main>
   );
 }

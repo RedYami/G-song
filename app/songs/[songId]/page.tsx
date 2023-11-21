@@ -15,13 +15,13 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
       return song.data;
     },
   });
-  console.log(data);
 
   return (
     <>
       {status === "pending" && <SongSkeleton />}
       {status === "success" && (
         <SongForm
+          songId={params.songId}
           songKey={data?.key as string}
           author={data?.author}
           title={data?.title}

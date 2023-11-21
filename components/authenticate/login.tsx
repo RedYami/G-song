@@ -37,7 +37,10 @@ export default function Login() {
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
-  const toastError = () => toast.error("email or password is incorrect!!");
+  const toastError = () => {
+    setIsLogging(false);
+    toast.error("email or password is incorrect!!");
+  };
   const toastSuccess = () => toast.success("Login success");
 
   const onSubmit = async (data: any) => {
@@ -49,6 +52,8 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           toastSuccess();
+          // document.cookie = `loginWithFireBase=true;`;
+          localStorage.setItem("isLoginWithFirebase", "yes");
           router.push("/songs");
         })
         .catch(() => toastError());

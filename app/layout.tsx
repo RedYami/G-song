@@ -28,7 +28,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <div className=" overflow-hidden">{children}</div>
+          </QueryProvider>
           <Toaster />
         </ThemeProvider>
       </body>

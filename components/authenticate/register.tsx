@@ -22,6 +22,10 @@ import {
 } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { useState } from "react";
+import SomethingLoading from "../loadingSomething";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -40,10 +44,16 @@ export default function RegisterHere() {
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
+  const [registering, setRegistering] = useState(false);
 
   const onSubmit = async (data: any) => {
+    setRegistering(true);
     await registerUser(data.username, data.email, data.password)
-      .then(() => router.push("/songs"))
+      .then(() => {
+        toast.success("registering complete");
+        document.cookie = `loginWithFireBase=false;`;
+        router.push("/songs");
+      })
       .catch((error) => console.log(error));
   };
   const registerUser = async (
@@ -58,6 +68,10 @@ export default function RegisterHere() {
           photoURL: "https://github.com/shadcn.png",
         }).catch((error) => alert(error.message))
       );
+      await axios.post("http://localhost:3000/api/user", {
+        username: userName,
+        email: email,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -120,6 +134,11 @@ export default function RegisterHere() {
           />
           <Button type="submit">Submit</Button>
         </form>
+        {registering && (
+          <SomethingLoading>
+            <h3 className="text-2xl">Registering..</h3>
+          </SomethingLoading>
+        )}
       </main>
     </Form>
   );

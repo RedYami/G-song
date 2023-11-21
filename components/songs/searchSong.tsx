@@ -11,7 +11,7 @@ export default function SearchSong({ hide }: { hide: () => void }) {
   const [searching, setSearching] = useState(false);
   const [searchSongs, setSearchSongs] = useState<any>([]);
   const [searchBy, setSearchBy] = useState("lyric");
-  console.log(searchBy);
+  const [searchResults, setSearchResults] = useState<number | null>(null);
 
   async function getSearchSong() {
     if (!searchText) {
@@ -72,26 +72,33 @@ export default function SearchSong({ hide }: { hide: () => void }) {
           </Button>
         </div>
         <ul className="w-full flex flex-col justify-center max-h-[60vh] overflow-auto">
-          {searchSongs &&
-            searchSongs?.map((item: any) =>
-              searchBy === "lyric" ? (
-                <Link
-                  key={item.id}
-                  href={`songs/${item?.parent_verse?.songId}`}
-                  className="text-lg font-bold p-2 m-2 rounded-md border-2"
-                >
-                  {item.lyric_line}
-                </Link>
-              ) : (
-                <Link
-                  key={item.id}
-                  href={`songs/${item?.id}`}
-                  className="text-2xl font-bold p-2 m-2 rounded-md border-2"
-                >
-                  {item.title}
-                </Link>
-              )
-            )}
+          {searchSongs?.length === 0 && (
+            <h4 className="px-2">search result: 0</h4>
+          )}
+          {searchSongs && searchSongs.length !== 0 && (
+            <>
+              <h4 className="px-2">search result: {searchSongs.length}</h4>
+              {searchSongs?.map((item: any) =>
+                searchBy === "lyric" ? (
+                  <Link
+                    key={item.id}
+                    href={`songs/${item?.parent_verse?.songId}`}
+                    className=" italic text-lg font-bold p-2 m-2 rounded-md border-2"
+                  >
+                    {item.lyric_line}
+                  </Link>
+                ) : (
+                  <Link
+                    key={item.id}
+                    href={`songs/${item?.id}`}
+                    className="text-2xl font-bold p-2 m-2 rounded-md border-2"
+                  >
+                    {item.title}
+                  </Link>
+                )
+              )}
+            </>
+          )}
         </ul>
       </section>
       {searching && (

@@ -7,6 +7,7 @@ export async function AddSong(data: any) {
         await prisma.song.create({
             data: {
               title: data.title,
+              songType:data.songType,
               titleLowerCase:data.title.toLowerCase(),
               key: data.key,
               author: {
@@ -26,11 +27,12 @@ export async function AddSong(data: any) {
               },
             },
           });
+          return "success"
         
     } catch (error) {
         console.log(error);
         
-        return error
+        throw error
     }
   }
 
@@ -69,9 +71,44 @@ export async function AddSong(data: any) {
     }
   }
 
+  export async function getSongsByType(type:string){
+    try {
+      const songs = await prisma.song.findMany({
+        where:{
+          songType:type
+        },
+        include:{
+          verses:true,
+          author:true,
+        },
+        orderBy:{
+          titleLowerCase:"asc"
+        }
+      })
+
+      
+      return songs
+    } catch (error) {
+      return error
+    }
+  }
+
   export async function deleteAllSongs(){
     await prisma.song.deleteMany();
     return "success"
+  }
+
+  export async function deleteASong(songId:string){
+    try {
+      await prisma.song.delete({
+        where:{
+          id:songId
+        }
+      })
+      return "success"
+    } catch (error) {
+      return error
+    }
   }
 
   export async function searchSongs(searchText:string){
@@ -79,7 +116,7 @@ export async function AddSong(data: any) {
       const songs = await prisma.song.findMany({
         where:{
           titleLowerCase:{
-            contains:searchText
+            contains:searchText.toLowerCase()
           }
         }
       })

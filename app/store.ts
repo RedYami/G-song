@@ -46,3 +46,14 @@ export const useIsSearching = create((set)=>({
         isSearching:boolean,
     }))
 }))
+type songCatagory = {
+    songCatagory:string;
+    setSongCatagory:(newSongCatagory:string)=>void
+}
+
+export const useSongCatagory = create<songCatagory>((set)=>({
+    songCatagory:"pop",
+    setSongCatagory:(newSongCatagory:string)=>set(()=>({
+        songCatagory:newSongCatagory,
+    }))
+}))

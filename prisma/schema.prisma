@@ -27,24 +27,27 @@ model User {
 model Lyric {
   id               String @id @unique @default(uuid())
   lyric_line       String
-  parent_verse     Verse  @relation(fields: [VerseId], references: [id], onDelete: Cascade)
+  parent_verse     Verse  @relation(fields: [VerseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   VerseId          String
   lower_case_lyric String @default("small")
 }
 
 model Verse {
-  id           String  @id @unique @default(uuid())
+  id           String   @id @unique @default(uuid())
   verse_number Int
   lyrics       Lyric[]
   type         String
-  Song         Song    @relation(fields: [songId], references: [id], onDelete: Cascade)
+  Song         Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
   songId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default("2023-11-21T05:39:17.170Z") @updatedAt()
 }
 
 model Song {
   id             String  @id @unique @default(uuid())
   title          String
   titleLowerCase String
+  songType       String  @default("pop")
   verses         Verse[]
   key            String
   author         User    @relation(fields: [userEmail], references: [email])

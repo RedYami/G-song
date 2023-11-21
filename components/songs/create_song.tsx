@@ -8,29 +8,39 @@ import axios from "axios";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import SomethingLoading from "../loadingSomething";
+import { SelectSongType } from "../songTypeSelect";
+import { useSongCatagory } from "@/app/store";
+let defaultVerses = [
+  {
+    id: "2k3",
+    verse_number: 1,
+    type: "verse",
+    lyrics: [
+      {
+        id: "0",
+        lyric_line: "",
+      },
+    ],
+  },
+];
 
-export default function CreateSong() {
-  const [title, setTitle] = useState("");
-  const [chorus, setChorus] = useState(false);
+type creatingProps = {
+  versess: typeof defaultVerses | null;
+  titlee: string | null;
+  keyy: string | null;
+};
+
+export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
+  const [title, setTitle] = useState(titlee || "");
   const [hidedVerses, setHidedVerses] = useState<string[]>(["1"]);
-  const [key, setKey] = useState("");
+  const [key, setKey] = useState(keyy || "");
   const [user, setUser] = useState<User | null>(null);
   const [submiting, setSubmiting] = useState(false);
-  const [verses, setVerses] = useState([
-    {
-      id: "2k3",
-      verse_number: 1,
-      type: "verse",
-      lyrics: [
-        {
-          id: "0",
-          lyric_line: "",
-        },
-      ],
-    },
-  ]);
+  const [songType, setSongType] = useState("pop");
+  const queryClient = useQueryClient();
+  const currentSongType = useSongCatagory((state) => state.songCatagory);
   const defaultVerses = [
     {
       id: "2k3",
@@ -44,6 +54,7 @@ export default function CreateSong() {
       ],
     },
   ];
+  const [verses, setVerses] = useState(versess || defaultVerses);
 
   useEffect(() => {
     // Load draft from localStorage on component mount
@@ -101,29 +112,7 @@ export default function CreateSong() {
       },
     ]);
   };
-  //add lyric or remove
-  const handlingChorus = () => {
-    if (!chorus) {
-      setVerses([
-        ...verses,
-        {
-          id: v4(),
-          verse_number: verses.length + 1,
-          type: "chorus",
-          lyrics: [
-            {
-              id: "0",
-              lyric_line: "",
-            },
-          ],
-        },
-      ]);
-    } else {
-      setVerses((verses) => verses.filter((verse) => verse.type !== "chorus"));
-    }
-    setChorus(!chorus);
-  };
-  // update verse type chorus or normal verse
+
   const handlingVerseType = (id: string) => {
     setVerses(
       verses.map((verse) => {
@@ -208,7 +197,7 @@ export default function CreateSong() {
     setTitle("");
     setKey("");
     setHidedVerses(["1"]);
-    setChorus(false);
+    // setChorus(false);
   };
   //submit new song
   const createNewSong = async () => {
@@ -217,18 +206,22 @@ export default function CreateSong() {
       title: title,
       key: key,
       verses: verses,
+      songType: songType,
     });
     if (response.status === 200) {
-      toast.success("creating new song success");
       setSubmiting(false);
       clearSongData();
       clearDraft();
-    } else {
-      toast.error("oops something went wrong check log");
+      queryClient.invalidateQueries({ queryKey: ["songs"] });
+      return toast.success("creating new song success");
     }
   };
   const createMutation = useMutation({
     mutationFn: createNewSong,
+    onError: (error: any) => {
+      setSubmiting(false);
+      toast.error(error.message);
+    },
   });
 
   const handleCreateNewSong = async () => {
@@ -259,16 +252,6 @@ export default function CreateSong() {
           >
             add verse
           </Button>
-          <Button
-            type="button"
-            className=" m-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlingChorus();
-            }}
-          >
-            {chorus ? "remove chorus" : "add chorus"}
-          </Button>
         </div>
         <form
           className=" min-h-[90vh] "
@@ -294,6 +277,7 @@ export default function CreateSong() {
               value={key}
               onChange={(e) => setKey(e.target.value)}
             />
+            <SelectSongType setSongType={setSongType} songType={songType} />
           </div>
           <div className=" flex justify-center flex-wrap items-start p-1 ">
             {verses?.map((verse) => (

@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 export default function Logout() {
   const logout = async () => {
     await signOut(auth);
+    localStorage.setItem("isLoginWithFirebase", "no");
   };
   return (
     <Button
