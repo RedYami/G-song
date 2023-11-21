@@ -50,6 +50,7 @@ export default function Song() {
       }
     },
   });
+  console.log("is current data:", data);
 
   return (
     <main className="flex flex-col relative ">
@@ -61,6 +62,7 @@ export default function Song() {
         </h3>
       )}
       {status === "success" &&
+        Array.isArray(data) &&
         data?.map((song: Song, index: number) => (
           <SongForm
             songType={song.songType}
