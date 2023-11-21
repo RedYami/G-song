@@ -41,7 +41,7 @@ export default function Song() {
     queryKey: ["songs", songType],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:3000/api/song/type?songType=${songType}`
+        `https://songlyrics-omega.vercel.app/api/song/type?songType=${songType}`
       );
       if (res.status === 200) {
         return res.data;
@@ -60,7 +60,7 @@ export default function Song() {
           {` ${songType} doesn't exist yet :)`}
         </h3>
       )}
-      {data &&
+      {status === "success" &&
         data?.map((song: Song, index: number) => (
           <SongForm
             songType={song.songType}

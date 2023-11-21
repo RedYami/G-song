@@ -20,7 +20,7 @@ export default function SearchSong({ hide }: { hide: () => void }) {
     }
     if (searchBy === "lyric") {
       const searchSongs = await fetch(
-        `http://localhost:3000/api/lyric?searchText=${searchText}`
+        `https://songlyrics-omega.vercel.app/api/lyric?searchText=${searchText}`
       );
       if (searchSongs.ok) {
         setSearchSongs(await searchSongs.json());
@@ -29,7 +29,7 @@ export default function SearchSong({ hide }: { hide: () => void }) {
     }
     if (searchBy === "title") {
       const searchSongs = await fetch(
-        `http://localhost:3000/api/song/search?searchText=${searchText}`
+        `https://songlyrics-omega.vercel.app/api/song/search?searchText=${searchText}`
       );
       if (searchSongs.ok) {
         setSearchSongs(await searchSongs.json());

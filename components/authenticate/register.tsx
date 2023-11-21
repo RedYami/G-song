@@ -68,7 +68,7 @@ export default function RegisterHere() {
           photoURL: "https://github.com/shadcn.png",
         }).catch((error) => alert(error.message))
       );
-      await axios.post("http://localhost:3000/api/user", {
+      await axios.post("https://songlyrics-omega.vercel.app/api/user", {
         username: userName,
         email: email,
       });

@@ -28,8 +28,8 @@ export function SelectSongType({
           {/* <SelectLabel>{currentSongCata}</SelectLabel> */}
           <SelectItem value="rock">rock</SelectItem>
           <SelectItem value="pop">pop</SelectItem>
+          <SelectItem value="gospel">gospel</SelectItem>
           <SelectItem value="classic">classic</SelectItem>
-          <SelectItem value="opera">opera</SelectItem>
           <SelectItem value="country">country</SelectItem>
         </SelectGroup>
       </SelectContent>
