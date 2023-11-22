@@ -11,7 +11,7 @@ import SongForm from "./songForm";
 import { useEffect, useMemo, useState } from "react";
 const fetchSongsByType = async () => {
   const res = await axios.get(
-    `http://localhost:3000/api/song/type?songType=${"dd"}`
+    `https://songlyrics-omega.vercel.app/api/song/type?songType=${"dd"}`
   );
   if (res.status === 200) {
     console.log(res);
@@ -27,7 +27,9 @@ export default function Song() {
   const { data, status } = useQuery({
     queryKey: ["songs"],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/api/song`);
+      const res = await axios.get(
+        `https://songlyrics-omega.vercel.app/api/song`
+      );
       if (res.status === 200) {
         console.log(res);
         return res.data;
