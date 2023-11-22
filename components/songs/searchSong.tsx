@@ -48,7 +48,7 @@ export default function SearchSong({ hide }: { hide: () => void }) {
     >
       <section
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col rounded-lg border-2 border-black dark:border-white justify-start w-[50vw] min-h-[50vh] items-start"
+        className="flex flex-col rounded-lg border-2 border-black dark:border-white justify-start xsm:w-[90vw] sm:w-[50vw] min-h-[50vh] items-start"
       >
         <div className="flex w-full justify-start m-2 items-center">
           <h5>Search by:</h5>
