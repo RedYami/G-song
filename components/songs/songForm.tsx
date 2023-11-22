@@ -72,9 +72,9 @@ export default function SongForm({
   if (status !== "pending" && data?.length === 0) return;
 
   return (
-    <main className="flex flex-col relative w-full ">
-      <article className="  flex justify-center  ">
-        <section className=" text-black relative dark:text-white w-fit min-w-[35vw]  flex flex-col justify-center">
+    <main className="pageWarper flex flex-col relative w-full ">
+      <article className="pageWarper  flex justify-center  ">
+        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit min-w-[35vw]  flex flex-col justify-center">
           {user?.email === author.email && (
             <div className="flex justify-between">
               <Button
