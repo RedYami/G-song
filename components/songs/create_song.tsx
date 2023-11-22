@@ -217,12 +217,16 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
       clearDraft();
       queryClient.invalidateQueries({ queryKey: ["songs"] });
       return toast.success("creating new song success");
+    } else {
+      console.log(response.statusText);
     }
   };
   const createMutation = useMutation({
     mutationFn: createNewSong,
     onError: (error: any) => {
       setSubmiting(false);
+      console.log(error);
+
       toast.error(error.message);
     },
   });

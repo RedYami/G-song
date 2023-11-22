@@ -1,14 +1,17 @@
 import prisma from "./client";
-
+const LanguageDetect = require("languagedetect");
+const lngDetector = new LanguageDetect();
 
 
 export async function AddSong(data: any) {
+    const checkedLanguage = lngDetector.detect(data.title,1);
+    
     try {
         await prisma.song.create({
             data: {
               title: data.title,
               songType:data.songType,
-              titleLowerCase:data.title.toLowerCase(),
+              titleLowerCase:(checkedLanguage.length && checkedLanguage[0][0]==="english")? data.title.toLowerCase():data.title,
               key: data.key,
               author: {
                 connect: { email: data.userEmail },
@@ -19,7 +22,7 @@ export async function AddSong(data: any) {
                   lyrics: {
                     create: verse.lyrics.map((lyric: any) => ({
                       lyric_line: lyric.lyric_line,
-                      lower_case_lyric:lyric.lyric_line.toLowerCase(),
+                      lower_case_lyric:(checkedLanguage.length && checkedLanguage[0][0]==="english")? lyric.lyric_line.toLowerCase():lyric.lyric_line,
                     })),
                   },
                   type: verse.type,
@@ -30,9 +33,9 @@ export async function AddSong(data: any) {
           return "success"
         
     } catch (error) {
-        console.log(error);
-        
-        throw error
+      console.log("from song back:",error);
+      
+        return error
     }
   }
 

@@ -10,10 +10,10 @@ export async function POST(request:NextRequest){
         return new Response("success",{
             status:200
         })
-    } catch (error) {
+    } catch (error:any) {
         return new Response("Error",{
             status:500,
-            statusText:"error in creating song"
+            statusText:error.message
         })
     }
 }
