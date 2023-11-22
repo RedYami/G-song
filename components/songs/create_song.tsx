@@ -201,16 +201,13 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
   };
   //submit new song
   const createNewSong = async () => {
-    const response = await axios.post(
-      "https://songlyrics-omega.vercel.app/api/song",
-      {
-        userEmail: user?.email,
-        title: title,
-        key: key,
-        verses: verses,
-        songType: songType,
-      }
-    );
+    const response = await axios.post("http://localhost:3000/api/song", {
+      userEmail: user?.email,
+      title: title,
+      key: key,
+      verses: verses,
+      songType: songType,
+    });
     if (response.status === 200) {
       setSubmiting(false);
       clearSongData();

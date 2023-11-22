@@ -10,7 +10,7 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
     queryKey: ["song", params.songId],
     queryFn: async () => {
       const song = await axios.get(
-        `https://songlyrics-omega.vercel.app/api/song/${params.songId}`
+        `http://localhost:3000/api/song/${params.songId}`
       );
       return song.data;
     },

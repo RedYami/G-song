@@ -4,9 +4,11 @@ import { NextRequest } from "next/server";
 export async function GET(req:NextRequest){
     try {
         const url = new URL(req.url);
-        const type = url.searchParams.get("songType");
+        const type = url.searchParams.get("songType") as string;
   
-        const songs = await getSongsByType(type as string);
+        const songs = await getSongsByType(type);
+        console.log("returned song in api:",songs);
+        
         return new Response(JSON.stringify(songs),{
             status:200
         })

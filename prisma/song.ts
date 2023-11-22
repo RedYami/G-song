@@ -82,10 +82,10 @@ export async function AddSong(data: any) {
           author:true,
         },
         orderBy:{
-          titleLowerCase:"asc"
+          title:"asc"
         }
       })
-
+      console.log("returned song:",songs);
       
       return songs
     } catch (error) {

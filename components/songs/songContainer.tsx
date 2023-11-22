@@ -1,69 +1,58 @@
 "use client";
-import React from "react";
-import Verse from "./verse";
 
-import SongForm from "./songForm";
+import { useQuery } from "@tanstack/react-query";
 import SongSkeleton from "../skeletons/songSkeleton";
 import { SongHeader } from "./searchBtn";
 import { useSongCatagory } from "@/app/store";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
-
-type lyric = {
-  id: number;
-  lyric_line: string;
-};
-type Verse = {
-  verse_number: number;
-  lyrics: lyric[];
-  type: string;
-  id: string;
-};
-type Song = {
-  id: string;
-  title: string;
-  verses: Verse[];
-  song_number: number;
-  key: string | null;
-  author: Author;
-  songType: string;
-};
-type Author = {
-  username: string;
-  email: string;
-  id: string;
+import { Song } from "@/app/types";
+import SongForm from "./songForm";
+import { useEffect, useMemo, useState } from "react";
+const fetchSongsByType = async () => {
+  const res = await axios.get(
+    `http://localhost:3000/api/song/type?songType=${"dd"}`
+  );
+  if (res.status === 200) {
+    console.log(res);
+    return res.data;
+  } else {
+    return toast.error("error in fetching..");
+  }
 };
 
 export default function Song() {
   const songType = useSongCatagory((state) => state.songCatagory);
+  const [filteredSong, setFilteredSong] = useState<Song[] | []>([]);
   const { data, status } = useQuery({
-    queryKey: ["songs", songType],
+    queryKey: ["songs"],
     queryFn: async () => {
-      const res = await axios.get(
-        `https://songlyrics-omega.vercel.app/api/song/type?songType=${songType}`
-      );
+      const res = await axios.get(`http://localhost:3000/api/song`);
       if (res.status === 200) {
+        console.log(res);
         return res.data;
       } else {
-        toast.error("error in fetching songs");
+        return toast.error("error in fetching..");
       }
     },
   });
-  console.log("is current data:", data);
-
+  useEffect(() => {
+    if (data) {
+      setFilteredSong(data.filter((song: Song) => song.songType === songType));
+    }
+  }, [data, songType]);
   return (
     <main className="flex flex-col relative ">
       <SongHeader />
       {status === "pending" && <SongSkeleton />}
-      {data?.length === 0 && (
+      {data && setFilteredSong?.length === 0 && (
         <h3 className="xsm:text-lg sm:text-2xl text-center">
-          {` ${songType} doesn't exist yet :)`}
+          {` ${"pop"} doesn't exist yet :)`}
         </h3>
       )}
       {status === "success" &&
-        Array.isArray(data) &&
-        data?.map((song: Song, index: number) => (
+        filteredSong &&
+        filteredSong.map((song: Song, index: number) => (
           <SongForm
             songType={song.songType}
             songId={song.id}
