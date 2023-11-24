@@ -44,7 +44,7 @@ export default function SearchSong({ hide }: { hide: () => void }) {
         e.stopPropagation();
         hide();
       }}
-      className="fixed top-0 right-0 z-50 w-full h-full backdrop-blur-sm flex justify-center items-center"
+      className="fixed top-0 right-0 z-40 w-full h-full backdrop-blur-sm flex justify-center items-center"
     >
       <section
         onClick={(e) => e.stopPropagation()}

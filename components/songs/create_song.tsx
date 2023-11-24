@@ -38,7 +38,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
   const [key, setKey] = useState(keyy || "");
   const [user, setUser] = useState<User | null>(null);
   const [submiting, setSubmiting] = useState(false);
-  const [songType, setSongType] = useState("pop");
+  const [songType, setSongType] = useState("");
   const queryClient = useQueryClient();
   const currentSongType = useSongCatagory((state) => state.songCatagory);
   const defaultVerses = [
@@ -201,6 +201,9 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
   };
   //submit new song
   const createNewSong = async () => {
+    if (!songType) {
+      throw new Error("please choose song type");
+    }
     const response = await axios.post(
       "https://songlyrics-omega.vercel.app/api/song",
       {
@@ -225,8 +228,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
     mutationFn: createNewSong,
     onError: (error: any) => {
       setSubmiting(false);
-      console.log(error);
-
+      // console.log(error);
       toast.error(error.message);
     },
   });

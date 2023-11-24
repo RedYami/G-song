@@ -2,6 +2,7 @@
 import { auth } from "@/app/firebase-config";
 import { signOut } from "firebase/auth";
 import { Button } from "../ui/button";
+import { LogOutIcon } from "lucide-react";
 
 export default function Logout() {
   const logout = async () => {
@@ -10,10 +11,11 @@ export default function Logout() {
   };
   return (
     <Button
-      className=" bg-black hover:bg-red-600 m-1 text-white"
+      className=" bg-black hover:bg-red-600 m-1 text-white flex"
       onClick={() => logout()}
     >
-      LogOut
+      <h3 className="xsm:hidden sm:block mx-1">LogOut</h3>
+      <LogOutIcon />
     </Button>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import Verse from "./verse";
 import axios from "axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import SongSkeleton from "../skeletons/songSkeleton";
 import toast from "react-hot-toast";
 import { Button } from "../ui/button";
@@ -10,6 +10,9 @@ import SomethingLoading from "../loadingSomething";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
 import Link from "next/link";
+import Edit from "../icons/editIcon";
+import Delete from "../icons/deleteIcon";
+import Confirm from "../confirmWidget";
 
 type lyric = {
   id: string;
@@ -52,6 +55,7 @@ export default function SongForm({
       return verses.data;
     },
   });
+  const queryClient = useQueryClient();
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -64,44 +68,32 @@ export default function SongForm({
       );
       if (response.status === 200) {
         setDeletingSong(false), toast.success("delete success");
+        queryClient.invalidateQueries({ queryKey: ["songs"] });
       } else {
         toast.error("error in deleting");
       }
     },
   });
   if (status !== "pending" && data?.length === 0) return;
-
+  const editQuery = {
+    songId: songId,
+    title: title,
+    songKey: songKey,
+    versesIds: JSON.stringify(versesIds),
+    songType: songType,
+  };
+  const handleDeleteSong = () => {
+    deleteSong.mutate();
+    setDeletingSong(true);
+  };
   return (
     <main className="pageWarper flex flex-col relative w-full ">
       <article className="pageWarper  flex justify-center  ">
         <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit min-w-[35vw]  flex flex-col justify-center">
-          {user?.email === author.email && (
-            <div className="flex justify-between">
-              <Button
-                onClick={() => {
-                  deleteSong.mutate();
-                  setDeletingSong(true);
-                }}
-                className="hover:bg-red-500 "
-              >
-                delete
-              </Button>
-              <Button className="hover:bg-green-500 ">
-                <Link
-                  href={{
-                    pathname: "/songs/editSong",
-                    query: {
-                      songId: songId,
-                      title: title,
-                      songKey: songKey,
-                      versesIds: JSON.stringify(versesIds),
-                      songType: songType,
-                    },
-                  }}
-                >
-                  Edit
-                </Link>
-              </Button>
+          {status === "success" && user?.email === author.email && (
+            <div className=" absolute top-0 left-0 right-0 flex justify-between">
+              <Confirm onclick={handleDeleteSong} title={title} />
+              <Edit link={"/songs/editSong"} query={editQuery} />
             </div>
           )}
           {status === "pending" ? (

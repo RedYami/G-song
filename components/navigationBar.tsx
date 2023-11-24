@@ -11,6 +11,9 @@ import LoginOrOut from "./authenticate/logOutOrIn";
 import { useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
+import Home from "./icons/homeIcon";
+import Music from "./icons/musicIcon";
+import Create from "./icons/createIcon";
 
 export default function NavigationBar() {
   const [user, setUser] = useState<User | null>(null);
@@ -28,20 +31,22 @@ export default function NavigationBar() {
               <NavigationMenuLink
                 className={
                   navigationMenuTriggerStyle() +
-                  "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit "
+                  "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex "
                 }
               >
-                Home
+                <h3 className="xsm:hidden sm:block mx-1">Home</h3>
+                <Home />
               </NavigationMenuLink>
             </Link>
             <Link href="/songs" legacyBehavior passHref>
               <NavigationMenuLink
                 className={
                   navigationMenuTriggerStyle() +
-                  "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit "
+                  "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex "
                 }
               >
-                Song
+                <h3 className="xsm:hidden sm:block mx-1">Songs</h3>
+                <Music />
               </NavigationMenuLink>
             </Link>
             {user && (
@@ -49,10 +54,11 @@ export default function NavigationBar() {
                 <NavigationMenuLink
                   className={
                     navigationMenuTriggerStyle() +
-                    "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit "
+                    "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex "
                   }
                 >
-                  Create Song
+                  <h3 className="xsm:hidden sm:block mx-1">Create Song</h3>
+                  <Create />
                 </NavigationMenuLink>
               </Link>
             )}

@@ -44,12 +44,15 @@ model Verse {
 }
 
 model Song {
-  id             String  @id @unique @default(uuid())
-  title          String
-  titleLowerCase String
-  songType       String  @default("pop")
-  verses         Verse[]
-  key            String
-  author         User    @relation(fields: [userEmail], references: [email])
-  userEmail      String
+  id                  String  @id @unique @default(uuid())
+  title               String
+  titleLowerCase      String
+  songType            String  @default("pop")
+  verses              Verse[]
+  key                 String
+  officialSongWritter String?
+  officialSinger      String?
+  video               String?
+  author              User    @relation(fields: [userEmail], references: [email])
+  userEmail           String
 }
