@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import NavigationBar from "@/components/navigationBar";
 import { Toaster } from "react-hot-toast";
 import QueryProvider from "@/context/queryProvider";
+import { ProgressDemo } from "@/components/loadingProgress";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NavigationBar />
+        <ProgressDemo />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

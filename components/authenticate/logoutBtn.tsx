@@ -3,11 +3,12 @@ import { auth } from "@/app/firebase-config";
 import { signOut } from "firebase/auth";
 import { Button } from "../ui/button";
 import { LogOutIcon } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function Logout() {
   const logout = async () => {
     await signOut(auth);
-    localStorage.setItem("isLoginWithFirebase", "no");
+    Cookies.remove("firebase-auth");
   };
   return (
     <Button

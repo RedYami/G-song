@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -53,7 +53,7 @@ export default function Login() {
         .then(() => {
           toastSuccess();
           // document.cookie = `loginWithFireBase=true;`;
-          localStorage.setItem("isLoginWithFirebase", "yes");
+          Cookies.set("firebase-auth", "true");
           router.push("/songs");
         })
         .catch(() => toastError());

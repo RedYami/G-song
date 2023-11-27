@@ -1,5 +1,6 @@
 "use client";
 
+import BackButton from "@/components/icons/backIcon";
 import SongSkeleton from "@/components/skeletons/songSkeleton";
 import SongForm from "@/components/songs/songForm";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +19,7 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
 
   return (
     <>
+      <BackButton />
       {status === "pending" && <SongSkeleton />}
       {status === "success" && (
         <SongForm

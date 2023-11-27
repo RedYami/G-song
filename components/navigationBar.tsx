@@ -8,20 +8,10 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import LoginOrOut from "./authenticate/logOutOrIn";
-import { useEffect, useState } from "react";
-import { User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/app/firebase-config";
 import Home from "./icons/homeIcon";
 import Music from "./icons/musicIcon";
 import Create from "./icons/createIcon";
-
 export default function NavigationBar() {
-  const [user, setUser] = useState<User | null>(null);
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-  });
   return (
     <nav className="pageWarper sticky top-0 left-0 z-40 right-0 border-b-2  border-black dark:border-white backdrop-blur-2xl">
       <NavigationMenu>
@@ -49,19 +39,19 @@ export default function NavigationBar() {
                 <Music />
               </NavigationMenuLink>
             </Link>
-            {user && (
-              <Link href="/createSong" legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={
-                    navigationMenuTriggerStyle() +
-                    "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex "
-                  }
-                >
-                  <h3 className="xsm:hidden sm:block mx-1">Create Song</h3>
-                  <Create />
-                </NavigationMenuLink>
-              </Link>
-            )}
+
+            <Link href="/createSong" legacyBehavior passHref>
+              <NavigationMenuLink
+                className={
+                  navigationMenuTriggerStyle() +
+                  "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex "
+                }
+              >
+                <h3 className="xsm:hidden sm:block mx-1">Create Song</h3>
+                <Create />
+              </NavigationMenuLink>
+            </Link>
+
             <LoginOrOut />
           </NavigationMenuItem>
         </NavigationMenuList>
