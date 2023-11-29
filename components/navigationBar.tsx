@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,9 +10,23 @@ import LoginOrOut from "./authenticate/logOutOrIn";
 import Home from "./icons/homeIcon";
 import Music from "./icons/musicIcon";
 import Create from "./icons/createIcon";
-import { useEffect } from "react";
 import { CustomLink } from "./customLink";
+import { useEffect, useState } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/app/firebase-config";
+import Cookies from "js-cookie";
 export default function NavigationBar() {
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+  }, []);
+  useEffect(() => {
+    if (user) {
+      Cookies.set("firebase-auth", "true");
+    }
+  }, [user]);
   return (
     <nav className="pageWarper sticky top-0 left-0 z-40 right-0 border-b-2  border-black dark:border-white backdrop-blur-2xl">
       <NavigationMenu>

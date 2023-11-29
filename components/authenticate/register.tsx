@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -62,11 +62,14 @@ export default function RegisterHere() {
     password: string
   ) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password).then((res) =>
-        updateProfile(res.user, {
-          displayName: userName,
-          photoURL: "https://github.com/shadcn.png",
-        }).catch((error) => alert(error.message))
+      await createUserWithEmailAndPassword(auth, email, password).then(
+        (res) => {
+          updateProfile(res.user, {
+            displayName: userName,
+            photoURL: "https://github.com/shadcn.png",
+          }).catch((error) => alert(error.message));
+          Cookies.set("firebase-auth", "true");
+        }
       );
       await axios.post("https://songlyrics-omega.vercel.app/api/user", {
         username: userName,
