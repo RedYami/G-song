@@ -15,10 +15,7 @@ import { useSongCatagory } from "@/app/store";
 export function SelectSongCatagory() {
   const currentSongCata = useSongCatagory((state) => state.songCatagory);
   const changeSongType = useSongCatagory((state) => state.setSongCatagory);
-  console.log("current type:", currentSongCata);
   const setSongCata = (value: string) => {
-    console.log("is clicked");
-
     changeSongType(value);
   };
 

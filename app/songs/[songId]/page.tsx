@@ -29,6 +29,7 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
           title={data?.title}
           verses={JSON.parse(JSON.stringify(data?.verses))}
           songType={data?.songType}
+          audio={data?.audio}
         />
       )}
       {status === "error" && <h2>ERRor :)</h2>}

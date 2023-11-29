@@ -9,6 +9,7 @@ export async function AddSong(data: any) {
     try {
         await prisma.song.create({
             data: {
+              audio:data.songAudio,
               title: data.title,
               songType:data.songType,
               titleLowerCase:(checkedLanguage.length && checkedLanguage[0][0]==="english")? data.title.toLowerCase():data.title,
@@ -35,7 +36,7 @@ export async function AddSong(data: any) {
     } catch (error) {
       console.log("from song back:",error);
       
-        return error
+        throw error
     }
   }
 

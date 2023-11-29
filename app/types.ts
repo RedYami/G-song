@@ -17,6 +17,8 @@ export type Song = {
     key: string | null;
     author: Author;
     songType: string;
+    coverImage:string;
+    audio:string;
   };
   type Author = {
     username: string;

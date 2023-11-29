@@ -1,0 +1,183 @@
+ useEffect(() => {
+    // Load draft from localStorage on component mount
+    const savedVerses = localStorage.getItem("verses");
+    const savedKey = localStorage.getItem("songKey");
+    const savedTitle = localStorage.getItem("title");
+
+    if (savedVerses) {
+      //   setVerses((savedVerses as any) || defaultVerses);
+      setTitle(savedTitle || "");
+      setKey(savedKey || "");
+      setVerses(JSON.parse(savedVerses as any) || defaultVerses);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save draft to localStorage on every input change
+    if (
+      verses?.[0].lyrics[0].lyric_line !== "" &&
+      verses?.[0].lyrics.length > 1
+    ) {
+      localStorage.setItem("verses", JSON.stringify(verses));
+    }
+    if (key !== "" || title !== "") {
+      localStorage.setItem("songKey", key);
+      localStorage.setItem("title", title);
+    }
+  }, [verses, key, title]);
+
+  const clearDraft = () => {
+    // Clear draft and remove from localStorage
+    localStorage.removeItem("verses");
+    localStorage.removeItem("songKey");
+    localStorage.removeItem("title");
+  };
+ 
+  //adding new verse
+  const handleAddNewVerse = () => {
+    setVerses([
+      ...verses,
+      {
+        id: v4(),
+        verse_number: verses.length + 1,
+        type: "verse",
+        lyrics: [
+          {
+            id: v4(),
+            lyric_line: "",
+          },
+        ],
+      },
+    ]);
+  };
+
+  const handlingVerseType = (id: string) => {
+    setVerses(
+      verses.map((verse) => {
+        if (verse.id === id) {
+          return {
+            ...verse,
+            type: verse.type === "verse" ? "chorus" : "verse",
+          };
+        }
+        return verse;
+      })
+    );
+  };
+  //add new lyric line
+  const handleAddNewLyricLine = (verseNumber: number) => {
+    setVerses((verses) =>
+      verses.map((verse) => {
+        if (verse.verse_number === verseNumber) {
+          return {
+            ...verse,
+            lyrics: [
+              ...verse.lyrics,
+              {
+                id: v4(),
+                lyric_line: "",
+              },
+            ],
+          };
+        }
+        return verse;
+      })
+    );
+  };
+  //update lyric by verse id and its id
+  const handleUpdateLyric = (
+    verseId: string,
+    lyricId: string,
+    newLyric: string
+  ) => {
+    setVerses((verses) =>
+      verses.map((verse) => {
+        if (verse.id === verseId) {
+          return {
+            ...verse,
+            lyrics: verse.lyrics.map((lyric) => {
+              if (lyric.id === lyricId) {
+                return {
+                  ...lyric,
+                  lyric_line: newLyric,
+                };
+              }
+              return lyric;
+            }),
+          };
+        }
+        return verse;
+      })
+    );
+  };
+  //delete verse by its id
+  const deleteVerse = (verseId: string) => {
+    setVerses((verses) => verses.filter((verse) => verse.id !== verseId));
+    setHidedVerses(hidedVerses.filter((verse) => verse !== verseId));
+  };
+  // delete lyric by its lyricId
+  const deleteLyricLine = (lyricId: string, verseNumber: number) => {
+    setVerses((verses) =>
+      verses.map((verse) => {
+        if (verse.verse_number === verseNumber) {
+          return {
+            ...verse,
+            lyrics: verse.lyrics.filter((lyric) => lyric.id !== lyricId),
+          };
+        }
+        return verse;
+      })
+    );
+  };
+  //clearing all song data
+  const clearSongData = () => {
+    setVerses(defaultVerses);
+    setTitle("");
+    setKey("");
+    setHidedVerses(["1"]);
+    // setChorus(false);
+  };
+  //submit new song
+  const createNewSong = async () => {
+    if (!songType) {
+      throw new Error("please choose song type");
+    }
+    const response = await axios.post("https://songlyrics-omega.vercel.app/api/song", {
+      userEmail: user?.email,
+      title: title,
+      key: key,
+      verses: verses,
+      songType: songType,
+    });
+    if (response.status === 200) {
+      setSubmiting(false);
+      clearSongData();
+      clearDraft();
+      queryClient.invalidateQueries({ queryKey: ["songs"] });
+      return toast.success("creating new song success");
+    } else {
+      console.log(response.statusText);
+    }
+  };
+  const createMutation = useMutation({
+    mutationFn: createNewSong,
+    onError: (error: any) => {
+      setSubmiting(false);
+      // console.log(error);
+      toast.error(error.message);
+    },
+  });
+
+  const handleCreateNewSong = async () => {
+    setSubmiting(true);
+    createMutation.mutate();
+  };
+
+  //toogling song verses hide or show
+  const showOrHideVerse = (verseId: string) => {
+    if (hidedVerses.includes(verseId)) {
+      setHidedVerses(hidedVerses.filter((verse) => verse != verseId));
+    } else {
+      setHidedVerses((hidedVerse) => [...hidedVerse, verseId]);
+    }
+  };

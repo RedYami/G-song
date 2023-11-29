@@ -13,6 +13,7 @@ import Link from "next/link";
 import Edit from "../icons/editIcon";
 import Delete from "../icons/deleteIcon";
 import Confirm from "../confirmWidget";
+import AudioPlayer from "../mp3Player";
 
 type lyric = {
   id: string;
@@ -31,6 +32,7 @@ export default function SongForm({
   author,
   songId,
   songType,
+  audio,
 }: {
   verses: Verse[];
   title: string;
@@ -38,6 +40,7 @@ export default function SongForm({
   author: { username: string; email: string };
   songId: string;
   songType: string;
+  audio: string;
 }) {
   let versesIds: string[] = verses.map((verse) => {
     return verse.id;
@@ -87,9 +90,9 @@ export default function SongForm({
     setDeletingSong(true);
   };
   return (
-    <main className="pageWarper flex flex-col relative w-full ">
+    <div className="pageWarper flex flex-col relative w-fit ">
       <article className="pageWarper  flex justify-center  ">
-        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit min-w-[35vw]  flex flex-col justify-center">
+        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit xsm:min-w-[370px] sm:min-w-[35vw]  flex flex-col justify-center">
           {status === "success" && user?.email === author.email && (
             <div className=" absolute top-0 left-0 right-0 flex justify-between">
               <Confirm onclick={handleDeleteSong} title={title} />
@@ -100,7 +103,9 @@ export default function SongForm({
             <SongSkeleton />
           ) : (
             <>
-              <h3 className=" text-2xl text-center p-1 ">{title}</h3>
+              <h3 className=" xsm:text-lg sm:text-2xl text-center p-1 ">
+                {title}
+              </h3>
               <h4 className=" text-lg italic text-start p-1 ">
                 Add by : {author?.username}
               </h4>
@@ -110,6 +115,7 @@ export default function SongForm({
               ))}
             </>
           )}
+          {audio && <AudioPlayer source={audio} />}
           <h3 className="text-sm text-center">********End********</h3>
         </section>
       </article>
@@ -118,7 +124,7 @@ export default function SongForm({
           <h3 className="text-2xl">Deleting...</h3>
         </SomethingLoading>
       )}
-    </main>
+    </div>
   );
 }
 

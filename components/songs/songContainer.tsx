@@ -2,24 +2,26 @@
 
 import { useQuery } from "@tanstack/react-query";
 import SongSkeleton from "../skeletons/songSkeleton";
-import { SongHeader } from "./searchBtn";
 import { useSongCatagory } from "@/app/store";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Song } from "@/app/types";
 import SongForm from "./songForm";
 import { useEffect, useMemo, useState } from "react";
-const fetchSongsByType = async () => {
-  const res = await axios.get(
-    `https://songlyrics-omega.vercel.app/api/song/type?songType=${"dd"}`
-  );
-  if (res.status === 200) {
-    console.log(res);
-    return res.data;
-  } else {
-    return toast.error("error in fetching..");
-  }
-};
+import Image from "next/image";
+import nProgress from "nprogress";
+import LoadingUI from "../loadingProgress";
+// const fetchSongsByType = async () => {
+//   const res = await axios.get(
+//     `https://songlyrics-omega.vercel.app/api/song/type?songType=${"dd"}`
+//   );
+//   if (res.status === 200) {
+//     console.log(res);
+//     return res.data;
+//   } else {
+//     return toast.error("error in fetching..");
+//   }
+// };
 
 export default function Song() {
   const songType = useSongCatagory((state) => state.songCatagory);
@@ -38,33 +40,53 @@ export default function Song() {
       }
     },
   });
+
   useEffect(() => {
     if (data) {
       setFilteredSong(data.filter((song: Song) => song.songType === songType));
     }
   }, [data, songType]);
   return (
-    <main className="flex flex-col relative ">
-      <SongHeader />
+    <div className="flex flex-col relative ">
       {status === "pending" && <SongSkeleton />}
       {data && setFilteredSong?.length === 0 && (
         <h3 className="xsm:text-lg sm:text-2xl text-center">
-          {` ${"pop"} doesn't exist yet :)`}
+          {` ${songType} doesn't exist yet :)`}
         </h3>
       )}
+
       {status === "success" &&
         filteredSong &&
         filteredSong.map((song: Song, index: number) => (
-          <SongForm
-            songType={song.songType}
-            songId={song.id}
+          <article
             key={index}
-            songKey={song.key as string}
-            author={song.author}
-            title={song.title}
-            verses={JSON.parse(JSON.stringify(song?.verses))}
-          />
+            className="flex xsm:flex-col sm:flex-row justify-center items-center my-2"
+          >
+            <Image
+              src={song.coverImage}
+              width={400}
+              height={400}
+              className=" object-cover bg-center rounded-l-md min-h-[200px] mr-2 xsm:hidden sm:block"
+              alt="songImg"
+            />
+            <Image
+              src={song.coverImage}
+              width={400}
+              height={400}
+              className=" object-cover bg-center rounded-t-md h-[20vh] sm:hidden"
+              alt="songImg"
+            />
+            <SongForm
+              songType={song.songType}
+              songId={song.id}
+              songKey={song.key as string}
+              author={song.author}
+              title={song.title}
+              verses={JSON.parse(JSON.stringify(song?.verses))}
+              audio={song.audio}
+            />
+          </article>
         ))}
-    </main>
+    </div>
   );
 }

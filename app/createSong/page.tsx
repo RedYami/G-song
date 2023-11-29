@@ -1,12 +1,13 @@
-import CreateSong from "@/components/songs/create_song";
-import { auth } from "../firebase-config";
+import CreateSong from "@/components/creating/create_song";
+import LoadingUI from "@/components/loadingProgress";
 
 export default function CreateSongPage() {
-  console.log("current user:", auth.currentUser);
-
   return (
-    <main className=" flex xsm:flex-col sm:flex-row justify-center ">
-      <CreateSong versess={null} titlee={null} keyy={null} />
-    </main>
+    <>
+      <LoadingUI />
+      <main className=" flex xsm:flex-col sm:flex-row justify-center ">
+        <CreateSong versess={null} titlee={null} keyy={null} />
+      </main>
+    </>
   );
 }
