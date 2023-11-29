@@ -5,6 +5,7 @@ import Rock from "public/rockicon.jpg";
 import Classic from "public/classicicon.jpg";
 import Image from "next/image";
 import Link from "next/link";
+import { CustomLink } from "./customLink";
 
 export default function HomeFeatures() {
   return (
@@ -31,9 +32,7 @@ export default function HomeFeatures() {
               iure beatae quibusdam in.
             </p>
           </div>
-          <Link className=" italic  w-fit  " href={"/createSong"}>
-            Create Now
-          </Link>
+          <CustomLink href={"/createSong"}>Create Now</CustomLink>
         </section>
       </article>
       <article className="flex m-2 xsm:flex-col sm:flex-row justify-center sm:w-[80vw] min-h-[40vh] border-2 rounded-lg">
@@ -58,9 +57,7 @@ export default function HomeFeatures() {
               iure beatae quibusdam in.
             </p>
           </div>
-          <Link className=" italic w-fit" href={"/createSong"}>
-            Listen now
-          </Link>
+          <CustomLink href={"/songs"}>Listen now</CustomLink>
         </section>
       </article>
       <article className="flex flex-col justify-start">
