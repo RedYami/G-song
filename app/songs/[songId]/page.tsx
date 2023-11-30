@@ -18,7 +18,7 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
   });
 
   return (
-    <>
+    <main className="flex flex-col justify-center items-center">
       <BackButton />
       {status === "pending" && <SongSkeleton />}
       {status === "success" && (
@@ -33,6 +33,6 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
         />
       )}
       {status === "error" && <h2>ERRor :)</h2>}
-    </>
+    </main>
   );
 }
