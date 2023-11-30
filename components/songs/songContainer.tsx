@@ -66,15 +66,9 @@ export default function Song() {
               src={song.coverImage}
               width={400}
               height={400}
-              className=" object-cover bg-center rounded-l-md min-h-[200px] mr-2 xsm:hidden sm:block"
+              className=" object-cover xsm:min-h-[10vh] xsm:max-h-[25vh] sm:min-h-[30vh] sm:max-h-[400px] bg-center xsm:rounded-t-md sm:rounded-l-md min-h-[200px] xsm:mr-0 sm:mr-2 "
               alt="songImg"
-            />
-            <Image
-              src={song.coverImage}
-              width={400}
-              height={400}
-              className=" object-cover bg-center rounded-t-md h-[20vh] sm:hidden"
-              alt="songImg"
+              sizes="(min-width: 340px) 25vh,(min-width:620px) 50vh"
             />
             <SongForm
               songType={song.songType}
