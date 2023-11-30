@@ -94,7 +94,7 @@ export default function SongForm({
       <article className="pageWarper  flex justify-center  ">
         <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit xsm:min-w-[370px] sm:min-w-[35vw]  flex flex-col justify-center">
           {status === "success" && user?.email === author.email && (
-            <div className=" absolute top-0 left-0 right-0 flex justify-between">
+            <div className=" absolute top-0 left-0 right-0 flex justify-between items-center">
               <Confirm onclick={handleDeleteSong} title={title} />
               <Edit link={"/songs/editSong"} query={editQuery} />
             </div>
@@ -115,7 +115,11 @@ export default function SongForm({
               ))}
             </>
           )}
-          {audio && <AudioPlayer source={audio} />}
+          {audio ? (
+            <AudioPlayer source={audio} />
+          ) : (
+            <h2 className="text-lg text-center">Audio not available</h2>
+          )}
           <h3 className="text-sm text-center">********End********</h3>
         </section>
       </article>
