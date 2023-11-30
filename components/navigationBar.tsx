@@ -39,7 +39,9 @@ export default function NavigationBar() {
                   "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex bg-none "
                 }
               >
-                <h3 className="xsm:hidden sm:block mx-1">Home</h3>
+                <h3 className="xsm:hidden sm:block mx-1 xsm:text-sm sm:text-lg">
+                  Home
+                </h3>
                 <Home />
               </NavigationMenuLink>
             </CustomLink>
@@ -50,7 +52,9 @@ export default function NavigationBar() {
                   "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex bg-none "
                 }
               >
-                <h3 className="xsm:hidden sm:block mx-1">Songs</h3>
+                <h3 className="xsm:hidden sm:block mx-1 xsm:text-sm sm:text-lg">
+                  Songs
+                </h3>
                 <Music />
               </NavigationMenuLink>
             </CustomLink>
@@ -62,7 +66,9 @@ export default function NavigationBar() {
                   "xsm:mt-2 sm:mx-2 xsm:w-full sm:w-fit flex bg-none "
                 }
               >
-                <h3 className="xsm:hidden sm:block mx-1">Create Song</h3>
+                <h3 className="xsm:hidden sm:block mx-1 xsm:text-sm sm:text-lg">
+                  Create Song
+                </h3>
                 <Create />
               </NavigationMenuLink>
             </CustomLink>
