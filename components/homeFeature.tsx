@@ -18,6 +18,7 @@ export default function HomeFeatures() {
               "https://firebasestorage.googleapis.com/v0/b/g-songs.appspot.com/o/music-pics%2Freal%20band.jpg?alt=media&token=ed301f67-3d80-4947-92b6-4f070301fdb2"
             }
             fill
+            sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
             className=" object-cover rounded-l-lg"
             alt="band"
           />
@@ -43,6 +44,7 @@ export default function HomeFeatures() {
               "https://firebasestorage.googleapis.com/v0/b/g-songs.appspot.com/o/music-pics%2FgirlHeadphone.jpg?alt=media&token=85a09ad9-1b5c-43b3-a060-bb8092767921"
             }
             fill
+            sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
             className=" object-cover rounded-l-lg bg-center"
             alt="band"
           />
@@ -78,6 +80,7 @@ export default function HomeFeatures() {
                 priority
                 src={Pop}
                 fill
+                sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
                 alt="pop"
                 className=" object-cover bg-center"
               />
@@ -91,6 +94,7 @@ export default function HomeFeatures() {
                 priority
                 src={Classic}
                 fill
+                sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
                 alt="pop"
                 className=" object-cover bg-center"
               />
@@ -104,6 +108,7 @@ export default function HomeFeatures() {
                 priority
                 src={Rock}
                 fill
+                sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
                 alt="pop"
                 className=" object-cover bg-center"
               />
@@ -117,6 +122,7 @@ export default function HomeFeatures() {
                 priority
                 src={Gospel}
                 fill
+                sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
                 alt="pop"
                 className=" object-cover bg-center"
               />
@@ -130,6 +136,7 @@ export default function HomeFeatures() {
                 priority
                 src={Country}
                 fill
+                sizes="(min-width: 340px) 30vw,(min-width:620px) 50vw"
                 alt="pop"
                 className=" object-cover bg-center"
               />
