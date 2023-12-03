@@ -1,10 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import nProgress from "nprogress";
 
 export default function BackButton() {
   const router = useRouter();
   const handleBack = () => {
+    nProgress.start();
     router.back();
   };
   return (

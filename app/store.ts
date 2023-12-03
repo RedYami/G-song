@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Verse } from "./types";
+import { Verse, lyric } from "./types";
 import { v4 } from "uuid";
 
 
@@ -71,6 +71,7 @@ type creatingSongAction = {
     setVerse:(verses:Verse[])=>void
     addNewVerse:()=>void
     changeVerseType:(verseId:string)=>void
+    updateVerse:(verseId:string,lyric_lines:lyric[])=>void
     deleteVerse:(verseId:string)=>void
     addNewLyricLine:(verseId:string)=>void
     updateLyricLine:(verseId:string,lyricId:string,newLyricLine:string)=>void
@@ -133,6 +134,17 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
             return verse;
           })
     })),
+    updateVerse:(verseId:string,lyric_lines:lyric[])=>set((state)=>({
+      songVerses:state.songVerses.map((verse) => {
+          if (verse.id === verseId) {
+            return {
+              ...verse,
+              lyrics:lyric_lines
+            };
+          }
+          return verse;
+        })
+  })),
     deleteVerse:(verseId:string)=>set((state)=>({
         songVerses:state.songVerses.filter((verse) => verse.id !== verseId)
     })),

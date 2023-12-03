@@ -118,7 +118,10 @@ export default function SongForm({
           {audio ? (
             <AudioPlayer source={audio} />
           ) : (
-            <h2 className="text-lg text-center">Audio not available</h2>
+            <div className="text-lg text-center flex justify-center items-center">
+              <h2 className="mx-1">Audio not available</h2>
+              <Button>Request audio</Button>
+            </div>
           )}
           <h3 className="text-sm text-center">********End********</h3>
         </section>

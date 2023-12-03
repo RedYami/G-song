@@ -1,8 +1,14 @@
+"use client";
 import Link from "next/link";
+import nProgress from "nprogress";
 
 export default function Edit({ link, query }: { link: string; query: any }) {
   return (
     <Link
+      onClick={(e) => {
+        e.stopPropagation();
+        nProgress.start();
+      }}
       href={{
         pathname: link,
         query: query,

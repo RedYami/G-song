@@ -61,6 +61,6 @@ export async function updateVerses(verses:any,songId:string,songKey:string,title
       } catch (error) {
         // Handle errors here
         console.error('Error updating verses:', error);
-        throw error
+        return error
       }
 }

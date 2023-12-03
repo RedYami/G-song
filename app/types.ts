@@ -5,7 +5,7 @@ export type Verse = {
     type: string;
   };
 
-  type lyric = {
+export  type lyric = {
     id: string;
     lyric_line: string;
   };

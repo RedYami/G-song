@@ -21,7 +21,7 @@ export default function SongWithId({ params }: { params: { songId: string } }) {
   return (
     <main className="flex flex-col justify-center items-center">
       <BackButton />
-      <LoadingUI />
+
       {status === "pending" && <SongSkeleton />}
       {status === "success" && (
         <SongForm

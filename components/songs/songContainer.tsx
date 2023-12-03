@@ -60,7 +60,7 @@ export default function Song() {
         filteredSong.map((song: Song, index: number) => (
           <article
             key={index}
-            className="flex xsm:flex-col sm:flex-row justify-center items-center my-2"
+            className="flex xsm:flex-col justify-center items-center my-2"
           >
             <Image
               src={song.coverImage}

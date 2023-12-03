@@ -88,7 +88,7 @@ export default function EditSong() {
   return (
     <article className=" w-[100vw] h-fit flex flex-col justify-center items-center ">
       <BackButton />
-      <LoadingUI />
+
       <section className="p-3 xsm:text-sm sm:text-xl xsm:w-[97vw] border h-[90vh] sm:w-[60vw] overflow-auto flex flex-col justify-start rounded-lg ">
         <div className="flex justify-between">
           <Button

@@ -4,16 +4,13 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { NormalSongFrom } from "../songs/songForm";
 import { v4 } from "uuid";
-import axios from "axios";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import SomethingLoading from "../loadingSomething";
 import { SelectSongType } from "../songTypeSelect";
 import { usePendingSong } from "@/app/store";
 import UploadAudio from "./uploadAudio";
-import LoadingUI from "../loadingProgress";
+import InsertLyrics from "./insertLyric";
 let defaultVerses = [
   {
     id: "2k3",
@@ -49,10 +46,29 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
   const addNewLyricLine = usePendingSong((state) => state.addNewLyricLine);
   const updateLyricLine = usePendingSong((state) => state.updateLyricLine);
   const deleteLyricLine = usePendingSong((state) => state.deleteLyricLine);
+  const updateVerse = usePendingSong((state) => state.updateVerse);
   const [hidedVerses, setHidedVerses] = useState<string[]>(["1"]);
   const [user, setUser] = useState<User | null>(null);
   const [submiting, setSubmiting] = useState(false);
+  const [updatingManyVerse, setUpdatingManyVerse] = useState(false);
+  const [currentVerseId, setCurrentVerseId] = useState("");
+  function convertLyricsToObjects(lyricsText: string) {
+    // Split the lyrics into lines
+    const lines = lyricsText.split("\n");
 
+    // Convert the lines into lyric objects with IDs
+    const lyricObjects = lines.map((line, index) => ({
+      id: `line-${index + 1}` + v4(), // Generating unique IDs for each line
+      lyric_line: line.trim(), // Storing the trimmed lyric line
+    }));
+    console.log("converted lyrics objs", lyricObjects);
+
+    updateVerse(currentVerseId, lyricObjects);
+  }
+  const handleChangeManyVerse = (lyricsString: string) => {
+    setUpdatingManyVerse(false);
+    convertLyricsToObjects(lyricsString);
+  };
   const defaultVerses = [
     {
       id: "2k3",
@@ -199,6 +215,18 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
                   }
                 >
                   <Button
+                    className=""
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setUpdatingManyVerse(true);
+                      setCurrentVerseId(verse.id);
+                      /////
+                    }}
+                  >
+                    create many
+                  </Button>
+                  <Button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -257,6 +285,12 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
       </section>
       {submiting && (
         <UploadAudio user={user} onCancel={() => setSubmiting(false)} />
+      )}
+      {updatingManyVerse && (
+        <InsertLyrics
+          hide={() => setUpdatingManyVerse(false)}
+          onsave={handleChangeManyVerse}
+        />
       )}
     </>
   );

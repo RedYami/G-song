@@ -4,7 +4,6 @@ import LoadingUI from "@/components/loadingProgress";
 export default function CreateSongPage() {
   return (
     <>
-      <LoadingUI />
       <main className=" flex xsm:flex-col sm:flex-row justify-center ">
         <CreateSong versess={null} titlee={null} keyy={null} />
       </main>

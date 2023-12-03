@@ -9,7 +9,6 @@ import Song from "@/components/songs/songContainer";
 export default function CSong() {
   return (
     <>
-      <LoadingUI />
       <main className="p-3">
         <SongHeader />
         <SelectSongCatagory />
