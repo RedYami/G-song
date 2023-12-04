@@ -92,7 +92,7 @@ export default function SongForm({
   return (
     <div className="pageWarper flex flex-col relative w-fit ">
       <article className="pageWarper  flex justify-center overflow-auto  ">
-        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit xsm:min-w-[370px] sm:min-w-[35vw]  flex flex-col justify-center">
+        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit xsm:min-w-[370px] xsm:max-w-[375px] sm:max-w-none sm:min-w-[35vw]  flex flex-col justify-center">
           {status === "success" && user?.email === author.email && (
             <div className=" absolute top-0 left-0 right-0 flex justify-between items-center">
               <Confirm onclick={handleDeleteSong} title={title} />
