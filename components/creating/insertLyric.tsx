@@ -12,7 +12,10 @@ export default function InsertLyrics({
   const [lyrics, setlyrics] = useState("");
   return (
     <div className="flex flex-col justify-center backdrop-blur-lg items-center z-50 fixed top-0 left-0 w-full h-full">
-      <form onSubmit={() => onsave(lyrics)}>
+      <form
+        onSubmit={() => onsave(lyrics)}
+        className=" border-2 p-1 rounded-lg"
+      >
         <textarea
           required
           value={lyrics}
@@ -27,7 +30,7 @@ export default function InsertLyrics({
             resize: "none",
             height: "auto",
           }}
-          className=" border min-w-[50vw] rounded-lg flex overflow-y-hidden flex-start ml-2 mr-2 text-lg p-2 font-bold outline-none bg-none"
+          className=" border sm:min-w-[50vw] xsm:min-w-[90vw] rounded-lg flex overflow-y-hidden flex-start ml-2 mr-2 text-lg p-2 font-bold outline-none bg-none"
         />
         <section className="flex justify-between p-1 items-center">
           <Button onClick={hide} type="button">
