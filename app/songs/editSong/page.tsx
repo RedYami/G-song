@@ -28,7 +28,9 @@ export default function EditSong() {
     queryKey: ["verses", versesIds],
     queryFn: async () => {
       const verses = await axios.get(
-        `http://localhost:3000/api/verse?verses=${versesIds.join(",")}`
+        `https://songlyrics-omega.vercel.app/api/verse?verses=${versesIds.join(
+          ","
+        )}`
       );
       return verses.data;
     },
@@ -65,13 +67,16 @@ export default function EditSong() {
   };
   const updateVerses = useMutation({
     mutationFn: async () => {
-      const res = await axios.put("http://localhost:3000/api/verse", {
-        verses: verses,
-        title: title,
-        key: key,
-        songId: songId,
-        songType: songType,
-      });
+      const res = await axios.put(
+        "https://songlyrics-omega.vercel.app/api/verse",
+        {
+          verses: verses,
+          title: title,
+          key: key,
+          songId: songId,
+          songType: songType,
+        }
+      );
       if (res.status === 200) {
         setSaving(false);
         queryClient.invalidateQueries({ queryKey: ["songs"] });

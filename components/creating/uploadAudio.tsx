@@ -43,14 +43,17 @@ export default function UploadAudio({
       if (!songType) {
         throw new Error("please choose song type");
       }
-      const response = await axios.post("http://localhost:3000/api/song", {
-        userEmail: user?.email,
-        title: title,
-        key: key,
-        verses: verses,
-        songType: songType,
-        songAudio: url,
-      });
+      const response = await axios.post(
+        "https://songlyrics-omega.vercel.app/api/song",
+        {
+          userEmail: user?.email,
+          title: title,
+          key: key,
+          verses: verses,
+          songType: songType,
+          songAudio: url,
+        }
+      );
       if (response.status === 200) {
         setSubmiting(false);
         onCancel();
