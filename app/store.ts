@@ -77,6 +77,7 @@ type creatingSongAction = {
     updateLyricLine:(verseId:string,lyricId:string,newLyricLine:string)=>void
     deleteLyricLine:(verseId:string,lyricId:string)=>void
     clearSongData:()=>void
+    updateLyricType:(verseId:string,lyricId:string)=>void
 }
 
 export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=>({
@@ -91,6 +92,7 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
           {
             id: "0",
             lyric_line: "",
+            lyricType:"lyric",
           },
         ],
       }],
@@ -118,6 +120,7 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
                     {
                       id: v4(),
                       lyric_line: "",
+                      lyricType:"lyric",
                     },
                   ],
                 },    
@@ -158,6 +161,7 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
                   {
                     id: v4(),
                     lyric_line: "",
+                    lyricType:"lyric",
                   },
                 ],
               };
@@ -184,6 +188,25 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
             return verse;
           })
     })),
+    updateLyricType:(verseId:string,lyricId:string)=>set((state)=>({
+      songVerses:state.songVerses.map((verse) => {
+          if (verse.id === verseId) {
+            return {
+              ...verse,
+              lyrics: verse.lyrics.map((lyric) => {
+                if (lyric.id === lyricId) {
+                  return {
+                    ...lyric,
+                    lyricType:lyric.lyricType==="lyric"?"key":"lyric",
+                  };
+                }
+                return lyric;
+              }),
+            };
+          }
+          return verse;
+        })
+  })),
     deleteLyricLine:(verseId:string,lyricId:string)=>set((state)=>({
         songVerses:state.songVerses.map((verse) => {
             if (verse.id === verseId) {
@@ -207,6 +230,7 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
               {
                 id: "0",
                 lyric_line: "",
+                lyricType:"lyric"
               },
             ],
           }]

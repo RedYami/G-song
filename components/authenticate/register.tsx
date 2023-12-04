@@ -71,7 +71,7 @@ export default function RegisterHere() {
           Cookies.set("firebase-auth", "true");
         }
       );
-      await axios.post("https://songlyrics-omega.vercel.app/api/user", {
+      await axios.post("http://localhost:3000/api/user", {
         username: userName,
         email: email,
       });

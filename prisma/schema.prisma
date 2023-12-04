@@ -24,6 +24,7 @@ model User {
 model Lyric {
   id               String @id @unique @default(uuid())
   lyric_line       String
+  lyricType        String @default("lyric")
   parent_verse     Verse  @relation(fields: [VerseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   VerseId          String
   lower_case_lyric String @default("small")

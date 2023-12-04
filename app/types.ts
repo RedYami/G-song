@@ -8,6 +8,7 @@ export type Verse = {
 export  type lyric = {
     id: string;
     lyric_line: string;
+    lyricType:string;
   };
 export type Song = {
     id: string;

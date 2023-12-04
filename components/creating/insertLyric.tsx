@@ -14,13 +14,13 @@ export default function InsertLyrics({
     <div className="flex flex-col justify-center backdrop-blur-lg items-center z-50 fixed top-0 left-0 w-full h-full">
       <form
         onSubmit={() => onsave(lyrics)}
-        className=" border-2 p-1 rounded-lg"
+        className=" border-2 p-2 rounded-lg"
       >
         <textarea
           required
           value={lyrics}
           autoFocus
-          placeholder="comment"
+          placeholder="insert lyrics"
           onChange={(e) => {
             setlyrics(e.target.value);
             e.target.style.height = "auto"; // Reset the height to auto

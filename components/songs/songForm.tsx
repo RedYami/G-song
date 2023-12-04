@@ -18,6 +18,7 @@ import AudioPlayer from "../mp3Player";
 type lyric = {
   id: string;
   lyric_line: string;
+  lyricType: string;
 };
 export type Verse = {
   id: string;
@@ -51,9 +52,7 @@ export default function SongForm({
     queryKey: ["verses", versesIds],
     queryFn: async () => {
       const verses = await axios.get(
-        `https://songlyrics-omega.vercel.app/api/verse?verses=${versesIds.join(
-          ","
-        )}`
+        `http://localhost:3000/api/verse?verses=${versesIds.join(",")}`
       );
       return verses.data;
     },
@@ -67,7 +66,7 @@ export default function SongForm({
   const deleteSong = useMutation({
     mutationFn: async () => {
       const response = await axios.delete(
-        `https://songlyrics-omega.vercel.app/api/song/${songId}`
+        `http://localhost:3000/api/song/${songId}`
       );
       if (response.status === 200) {
         setDeletingSong(false), toast.success("delete success");
@@ -92,7 +91,7 @@ export default function SongForm({
   return (
     <div className="pageWarper flex flex-col relative w-fit ">
       <article className="pageWarper  flex justify-center overflow-auto  ">
-        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit xsm:min-w-[370px] xsm:max-w-[375px] sm:max-w-none sm:min-w-[35vw]  flex flex-col justify-center">
+        <section className="pageWarper text-black overflow-auto relative dark:text-white w-fit xsm:min-w-[380px] xsm:max-w-[385px] sm:max-w-none sm:min-w-[35vw]  flex flex-col justify-center">
           {status === "success" && user?.email === author.email && (
             <div className=" absolute top-0 left-0 right-0 flex justify-between items-center">
               <Confirm onclick={handleDeleteSong} title={title} />
@@ -145,9 +144,9 @@ export function NormalSongFrom({
   songKey: string;
 }) {
   return (
-    <main className="flex flex-col relative min-w-[40vw] ">
+    <main className="flex flex-col relative min-w-[40vw] max-w-[50vw] ">
       <article className=" w-full flex justify-center relative ">
-        <section className=" text-black dark:text-white w-fit  flex flex-col justify-center">
+        <section className=" text-black dark:text-white w-fit overflow-auto  flex flex-col justify-center">
           <h3 className=" text-2xl text-center p-1 ">{title}</h3>
           <h5 className="text-xl p-2">Key:{songKey}</h5>
           {verses?.map((verse, index) => (

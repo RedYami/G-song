@@ -47,6 +47,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
   const updateLyricLine = usePendingSong((state) => state.updateLyricLine);
   const deleteLyricLine = usePendingSong((state) => state.deleteLyricLine);
   const updateVerse = usePendingSong((state) => state.updateVerse);
+  const updateLyricType = usePendingSong((state) => state.updateLyricType);
   const [hidedVerses, setHidedVerses] = useState<string[]>(["1"]);
   const [user, setUser] = useState<User | null>(null);
   const [submiting, setSubmiting] = useState(false);
@@ -60,6 +61,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
     const lyricObjects = lines.map((line, index) => ({
       id: `line-${index + 1}` + v4(), // Generating unique IDs for each line
       lyric_line: line.trim(), // Storing the trimmed lyric line
+      lyricType: "lyric",
     }));
     console.log("converted lyrics objs", lyricObjects);
 
@@ -241,6 +243,13 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
                       key={lyric.id}
                       className=" flex justify-between items-center p-1 "
                     >
+                      {/* <Button
+                        onClick={() => updateLyricType(verse.id, lyric.id)}
+                        type="button"
+                        className=" bg-green-500 text-white hover:bg-green-700 w-fit h-fit p-1"
+                      >
+                        {lyric.lyricType}
+                      </Button> */}
                       <input
                         required
                         className="xsm:min-w-[100px] sm:min-w-[280px] mr-2 p-1 border-b-2 border-black dark:border-white  outline-none bg-white dark:bg-black"
