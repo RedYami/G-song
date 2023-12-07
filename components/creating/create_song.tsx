@@ -160,7 +160,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
             handleCreateNewSong();
           }}
         >
-          <div className="flex justify-center items-center">
+          <div className="sm:flex-row xsm:flex-col justify-center items-center">
             <label className="text-center ">Title</label>
             <Input
               required
