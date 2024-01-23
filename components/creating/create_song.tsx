@@ -26,13 +26,7 @@ let defaultVerses = [
   },
 ];
 
-type creatingProps = {
-  versess: typeof defaultVerses | null;
-  titlee: string | null;
-  keyy: string | null;
-};
-
-export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
+export default function CreateSong() {
   const title = usePendingSong((state) => state.songTitle);
   const setTitle = usePendingSong((state) => state.setSongTitle);
   const key = usePendingSong((state) => state.songKey);
@@ -165,6 +159,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
                 setCurrentVerse={setCurrentVerseId}
                 updatingManyVerse={() => setUpdatingManyVerse(true)}
                 verse={verse}
+                key={verse.id}
               />
             ))}
           </div>
