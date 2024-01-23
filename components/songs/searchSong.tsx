@@ -11,7 +11,6 @@ export default function SearchSong({ hide }: { hide: () => void }) {
   const [searching, setSearching] = useState(false);
   const [searchSongs, setSearchSongs] = useState<any>([]);
   const [searchBy, setSearchBy] = useState("lyric");
-  const [searchResults, setSearchResults] = useState<number | null>(null);
 
   async function getSearchSong() {
     if (!searchText) {

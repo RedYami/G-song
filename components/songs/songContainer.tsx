@@ -9,6 +9,8 @@ import { Song } from "@/app/types";
 import SongForm from "./songForm";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+// import Again from "@/app/importTest"
+import TestingJSX from "./testJsx";
 import nProgress from "nprogress";
 import LoadingUI from "../loadingProgress";
 // const fetchSongsByType = async () => {
@@ -47,40 +49,42 @@ export default function Song() {
     }
   }, [data, songType]);
   return (
-    <div className="flex flex-col relative ">
-      {status === "pending" && <SongSkeleton />}
-      {data && setFilteredSong?.length === 0 && (
-        <h3 className="xsm:text-lg sm:text-2xl text-center">
-          {` ${songType} doesn't exist yet :)`}
-        </h3>
-      )}
+    <>
+      <div className="flex flex-col relative ">
+        {status === "pending" && <SongSkeleton />}
+        {data && setFilteredSong?.length === 0 && (
+          <h3 className="xsm:text-lg sm:text-2xl text-center">
+            {` ${songType} doesn't exist yet :)`}
+          </h3>
+        )}
 
-      {status === "success" &&
-        filteredSong &&
-        filteredSong.map((song: Song, index: number) => (
-          <article
-            key={index}
-            className="flex xsm:flex-col justify-center items-center my-2"
-          >
-            <Image
-              src={song.coverImage}
-              width={400}
-              height={400}
-              className=" object-cover xsm:min-h-[10vh] xsm:max-h-[25vh] sm:min-h-[30vh] sm:max-h-[400px] bg-center xsm:rounded-t-md sm:rounded-l-md min-h-[200px] xsm:mr-0 sm:mr-2 "
-              alt="songImg"
-              sizes="(min-width: 340px) 25vh,(min-width:620px) 50vh"
-            />
-            <SongForm
-              songType={song.songType}
-              songId={song.id}
-              songKey={song.key as string}
-              author={song.author}
-              title={song.title}
-              verses={JSON.parse(JSON.stringify(song?.verses))}
-              audio={song.audio}
-            />
-          </article>
-        ))}
-    </div>
+        {status === "success" &&
+          filteredSong &&
+          filteredSong.map((song: Song, index: number) => (
+            <article
+              key={index}
+              className="flex xsm:flex-col justify-center items-center my-2"
+            >
+              <Image
+                src={song.coverImage}
+                width={400}
+                height={400}
+                className=" object-cover xsm:min-h-[10vh] xsm:max-h-[25vh] sm:min-h-[30vh] sm:max-h-[400px] bg-center xsm:rounded-t-md sm:rounded-l-md min-h-[200px] xsm:mr-0 sm:mr-2 "
+                alt="songImg"
+                sizes="(min-width: 340px) 25vh,(min-width:620px) 50vh"
+              />
+              <SongForm
+                songType={song.songType}
+                songId={song.id}
+                songKey={song.key as string}
+                author={song.author}
+                title={song.title}
+                verses={JSON.parse(JSON.stringify(song?.verses))}
+                audio={song.audio}
+              />
+            </article>
+          ))}
+      </div>
+    </>
   );
 }

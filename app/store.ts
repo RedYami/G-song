@@ -3,30 +3,6 @@ import { Verse, lyric } from "./types";
 import { v4 } from "uuid";
 
 
-//   type Verse = {
-//     verse_number: number;
-//     id:string;
-//     lyrics: lyric[];
-//     type: string;
-//   };
-//   type Song = {
-//     title: string;
-//     verses: Verse[];
-//     song_number: number;
-//     key: string | null;
-//   };
-// type SongType = {
-//     songs:Song[]|[],
-//     addNewSong:(newSong:Song)=>void;
-// }
-
-// export const useSongs = create<SongType>((set)=>({
-//     songs:[],
-//     addNewSong:(newSong:Song)=>set((state)=>({songs:[
-//         ...state.songs,
-//         newSong
-//     ]}))
-// }))
 type CreatingSong = {
     isCreating:boolean,
     setIsCreating:()=>void
@@ -45,6 +21,26 @@ export const useIsSearching = create((set)=>({
         isSearching:boolean,
     }))
 }))
+
+type RouteType = {
+  previousPath:string;
+  newPath:string;
+  setPreviousPath:(newPath:string)=>void;
+  setNewPath:(newPath:string)=>void;
+}
+
+export const useRoutePath= create<RouteType>((set)=>({
+  previousPath:"",
+  newPath:"/",
+  setPreviousPath:(newPath:string)=>set(()=>({
+      previousPath:newPath,
+  })),
+  setNewPath:(newPath:string)=>set(()=>({
+    newPath:newPath,
+}))
+}))
+
+
 type songCatagory = {
     songCatagory:string;
     setSongCatagory:(newSongCatagory:string)=>void
@@ -218,7 +214,7 @@ export const usePendingSong = create<creatingSongType&creatingSongAction>((set)=
             return verse;
           })
     })),
-    clearSongData:()=>set((state)=>({
+    clearSongData:()=>set(()=>({
         songKey:"",
         songTitle:"",
         songType:"",

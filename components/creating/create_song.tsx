@@ -1,16 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { NormalSongFrom } from "../songs/songForm";
 import { v4 } from "uuid";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase-config";
-import toast from "react-hot-toast";
-import { SelectSongType } from "../songTypeSelect";
 import { usePendingSong } from "@/app/store";
 import UploadAudio from "./uploadAudio";
 import InsertLyrics from "./insertLyric";
+import SongHeaders from "./songHeaders";
+import VerseCreator from "./verseCreator";
+import { SeparatorHorizontal } from "lucide-react";
+import { Separator } from "../ui/separator";
 let defaultVerses = [
   {
     id: "2k3",
@@ -36,18 +37,11 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
   const setTitle = usePendingSong((state) => state.setSongTitle);
   const key = usePendingSong((state) => state.songKey);
   const setKey = usePendingSong((state) => state.setsongKey);
-  const songType = usePendingSong((state) => state.songType);
-  const setSongType = usePendingSong((state) => state.setsongType);
   const verses = usePendingSong((state) => state.songVerses);
   const setVerse = usePendingSong((state) => state.setVerse);
-  const updateVerseType = usePendingSong((state) => state.changeVerseType);
-  const deleteVerse = usePendingSong((state) => state.deleteVerse);
   const addVerse = usePendingSong((state) => state.addNewVerse);
-  const addNewLyricLine = usePendingSong((state) => state.addNewLyricLine);
-  const updateLyricLine = usePendingSong((state) => state.updateLyricLine);
-  const deleteLyricLine = usePendingSong((state) => state.deleteLyricLine);
   const updateVerse = usePendingSong((state) => state.updateVerse);
-  const updateLyricType = usePendingSong((state) => state.updateLyricType);
+  const resetSongData = usePendingSong((state) => state.clearSongData);
   const [hidedVerses, setHidedVerses] = useState<string[]>(["1"]);
   const [user, setUser] = useState<User | null>(null);
   const [submiting, setSubmiting] = useState(false);
@@ -122,6 +116,7 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
     localStorage.removeItem("verses");
     localStorage.removeItem("songKey");
     localStorage.removeItem("title");
+    resetSongData();
   };
   //submit new song
 
@@ -144,13 +139,13 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
         <div className="flex justify-start ">
           <Button
             type="button"
-            className=" m-2"
+            className=" m-2 xsm:text-sm sm:text-lg"
             onClick={(e) => {
               e.stopPropagation();
               addVerse();
             }}
           >
-            add verse
+            add verse +
           </Button>
         </div>
         <form
@@ -160,117 +155,17 @@ export default function CreateSong({ versess, titlee, keyy }: creatingProps) {
             handleCreateNewSong();
           }}
         >
-          <div className="sm:flex-row xsm:flex-col justify-center items-center">
-            <label className="text-center ">Title</label>
-            <Input
-              required
-              type="text"
-              className=" max-w-[200px] mx-2"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <label className="text-center ">Key</label>
-            <Input
-              required
-              type="text"
-              className=" max-w-[90px] mx-2"
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-            />
-            <SelectSongType setSongType={setSongType} songType={songType} />
-          </div>
+          <SongHeaders />
+          <Separator orientation="horizontal" className="w-full my-2" />
           <div className=" flex justify-center flex-wrap items-start p-1 ">
             {verses?.map((verse) => (
-              <div
-                className=" flex flex-col justify-center rounded-lg min-w-[300px] items-center m-1 border-2"
-                key={verse.verse_number}
-              >
-                <div className=" verse flex w-full justify-between p-1 items-center">
-                  <Button
-                    className=" mx-2"
-                    type="button"
-                    onClick={() => updateVerseType(verse.id)}
-                  >
-                    {verse.type === "verse" ? `verse` : verse.type}
-                  </Button>
-                  <Button
-                    className="hover:bg-red-500 mx-2"
-                    type="button"
-                    onClick={() => showOrHideVerse(verse.id)}
-                  >
-                    toogle
-                  </Button>
-                  {verses.length > 1 && (
-                    <Button
-                      className="hover:bg-red-500 mx-2"
-                      type="button"
-                      onClick={() => deleteVerse(verse.id)}
-                    >
-                      X
-                    </Button>
-                  )}
-                </div>
-                <div
-                  className={
-                    " flex flex-col justify-start p-1 w-full rounded-b-lg" +
-                    (hidedVerses.includes(verse.id) && " hidden")
-                  }
-                >
-                  <Button
-                    className=""
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setUpdatingManyVerse(true);
-                      setCurrentVerseId(verse.id);
-                      /////
-                    }}
-                  >
-                    create many
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addNewLyricLine(verse.id);
-                    }}
-                    className=" m-1"
-                  >
-                    new line +
-                  </Button>
-                  {verse.lyrics.map((lyric) => (
-                    <div
-                      key={lyric.id}
-                      className=" flex justify-between items-center p-1 "
-                    >
-                      {/* <Button
-                        onClick={() => updateLyricType(verse.id, lyric.id)}
-                        type="button"
-                        className=" bg-green-500 text-white hover:bg-green-700 w-fit h-fit p-1"
-                      >
-                        {lyric.lyricType}
-                      </Button> */}
-                      <input
-                        required
-                        className="xsm:min-w-[100px] sm:min-w-[280px] mr-2 p-1 border-b-2 border-black dark:border-white  outline-none bg-white dark:bg-black"
-                        value={lyric.lyric_line}
-                        onChange={(e) => {
-                          updateLyricLine(verse.id, lyric.id, e.target.value);
-                        }}
-                      />
-                      {verse.lyrics.length > 1 && (
-                        <Button
-                          onClick={() => deleteLyricLine(verse.id, lyric.id)}
-                          type="button"
-                          className=" bg-red-500 text-white hover:bg-red-700"
-                        >
-                          X
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <VerseCreator
+                hidedVerses={hidedVerses}
+                toogleShowHide={showOrHideVerse}
+                setCurrentVerse={setCurrentVerseId}
+                updatingManyVerse={() => setUpdatingManyVerse(true)}
+                verse={verse}
+              />
             ))}
           </div>
           <Button

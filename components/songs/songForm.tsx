@@ -112,7 +112,7 @@ export default function SongForm({
               </h4>
               <h5 className="text-xl p-2">Key:{songKey}</h5>
               {data?.map((verse: Verse, index: number) => (
-                <Verse song={verse} key={index} />
+                <Verse song={verse} key={verse.id} />
               ))}
             </>
           )}
@@ -152,7 +152,7 @@ export function NormalSongFrom({
           <h3 className=" text-2xl text-center p-1 ">{title}</h3>
           <h5 className="text-xl p-2">Key:{songKey}</h5>
           {verses?.map((verse, index) => (
-            <Verse song={verse} key={index} />
+            <Verse song={verse} key={verse.id} />
           ))}
         </section>
       </article>
